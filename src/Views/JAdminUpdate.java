@@ -17,6 +17,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -36,15 +37,16 @@ public class JAdminUpdate extends javax.swing.JFrame {
     public static String sqlSach = "SELECT * FROM SACH order by Ma_Sach asc";
     public static String sqlKhach = "SELECT * FROM KHACH_HANG order by Ma_Khach_hang asc";
     public static String sqlPhieu = "SELECT * FROM PHIEU_MUON order by Ma_Phieu_muon asc";
+    public static String filesach = "D:\\sach.txt";
     /**
      * Creates new form JAdminUpdate
      */
     public JAdminUpdate() {
         this.setLocation(100, 10);
         initComponents();
-        UpdateTable.LoadData(sqlSach, tbSach);
-        UpdateTable.LoadData(sqlKhach, tbKhach);
-        UpdateTable.LoadData(sqlPhieu, tbMuon);
+        UpdateTable.LoadData(filesach, tbSach);
+//        UpdateTable.LoadData(sqlKhach, tbKhach);
+//        UpdateTable.LoadData(sqlPhieu, tbMuon);
         ProcessCrt(false);
         ProcessCrt2(false);
         ProcessCrt3(false);
@@ -183,6 +185,12 @@ public class JAdminUpdate extends javax.swing.JFrame {
         });
 
         jLabel7.setText("Số lượng");
+
+        txtMaSach.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMaSachActionPerformed(evt);
+            }
+        });
 
         btAddSach.setText("Thêm");
         btAddSach.addActionListener(new java.awt.event.ActionListener() {
@@ -676,36 +684,54 @@ public class JAdminUpdate extends javax.swing.JFrame {
         // TODO add your handling code here:
         ProcessCrt(true);
         this.btAddSach.setEnabled(false);
-        try{
-            int row = this.tbSach.getSelectedRow();
-            String IDrow = (this.tbSach.getModel().getValueAt(row, 0)).toString();
-            String sql1 = "SELECT * FROM SACH where Ma_Sach='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaSach.setText(rs.getString("Ma_Sach"));
-                this.txtTenSach.setText(rs.getString("Ten_Sach"));
-                this.txtNhaXb.setText(rs.getString("Nha_Xb"));
-                this.txtTenTacGia.setText(rs.getString("Ten_Tac_gia"));
-                this.txtGia.setText((rs.getString("Gia_tien")));
-                this.txtSoLuong.setText(rs.getString("So_luong"));
+//        try{
+//            int row = this.tbSach.getSelectedRow();
+//            String IDrow = (this.tbSach.getModel().getValueAt(row, 0)).toString();
+//            String sql1 = "SELECT * FROM SACH where Ma_Sach='"+IDrow+"'";
+//            ResultSet rs = UpdateTable.ShowTextField(sql1);
+//            if(rs.next()) {
+//                this.txtMaSach.setText(rs.getString("Column 1"));
+//                this.txtTenSach.setText(rs.getString("Column 2"));
+//                this.txtNhaXb.setText(rs.getString("Nha_Xb"));
+//                this.txtTenTacGia.setText(rs.getString("Ten_Tac_gia"));
+//                this.txtGia.setText((rs.getString("Gia_tien")));
+//                this.txtSoLuong.setText(rs.getString("So_luong"));
+//            }
+//        }catch(Exception e) {
+//            
+//        }
+     try{
+        int row = this.tbSach.getSelectedRow();
+        String IDrow = (this.tbSach.getModel().getValueAt(row, 0)).toString();
+        List<String[]> data = UpdateTable.getDataFromTextFile(filesach);
+        for (String[] rows : data) {
+            if (rows[0].equals(IDrow)) {
+                this.txtMaSach.setText(rows[0]);
+                this.txtTenSach.setText(rows[1]);
+                this.txtNhaXb.setText(rows[2]);
+                this.txtTenTacGia.setText(rows[3]);
+                this.txtGia.setText(rows[4]);
+                this.txtSoLuong.setText(rows[5]);
+                break;
             }
-        }catch(Exception e) {
-            
         }
+    } catch(Exception e) {
+        // Handle exception
+    }
     }//GEN-LAST:event_tbSachMouseClicked
 
     private void btLookSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookSachActionPerformed
         // TODO add your handling code here:
         if(this.txtLookSach.getText().length() == 0) {
             String sql1 = "SELECT * from SACH ";
-            UpdateTable.LoadData(sql1, tbSach);
+            UpdateTable.LoadData(filesach, tbSach);
         }
         else {
             String sql1 = "SELECT * from SACH WHERE Ma_Sach like N'%"+this.txtLookSach.getText()+"%' "
             + "or Ten_Sach like N'%"+this.txtLookSach.getText()+"%'"
             + "or Ten_Tac_gia like N'%"+this.txtLookSach.getText()+"%'"
             + "or Nha_Xb like N'%"+this.txtLookSach.getText()+"%'";
-            UpdateTable.LoadData(sql1, tbSach);
+            UpdateTable.LoadData(filesach, tbSach);
         }
 
     }//GEN-LAST:event_btLookSachActionPerformed
@@ -717,7 +743,8 @@ public class JAdminUpdate extends javax.swing.JFrame {
         else {
             Sach s = new Sach(this.txtMaSach.getText(), this.txtTenSach.getText(), this.txtTenTacGia.getText(),this.txtNhaXb.getText(),
              Integer.parseInt(this.txtGia.getText()),Integer.parseInt(this.txtSoLuong.getText()));
-            SachData.InsertSach(s);
+            SachData.InsertSach(filesach,s);
+//            UpdateTable.LoadData(filesach, tbSach);
             this.btLookSach.doClick();
         }
         
@@ -743,8 +770,9 @@ public class JAdminUpdate extends javax.swing.JFrame {
         else {
             Sach s = new Sach(this.txtMaSach.getText(), this.txtTenSach.getText(), this.txtTenTacGia.getText(),this.txtNhaXb.getText(),
              Integer.parseInt(this.txtGia.getText()),Integer.parseInt(this.txtSoLuong.getText()));
-            if(sachdata.UpdateSach(s)) {
+            if(sachdata.UpdateSach(filesach,s)) {
                 JOptionPane.showMessageDialog(null, "Bạn đã sửa thành công", "Thông báo", 1);
+//                 UpdateTable.LoadData(filesach, tbSach);
             }
             else JOptionPane.showMessageDialog(null, "Bạn không thể sửa mã sách", "Thông báo", 2);
             this.btLookSach.doClick();
@@ -757,8 +785,9 @@ public class JAdminUpdate extends javax.swing.JFrame {
         if (this.txtMaSach.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã sách không thể bỏ trống", "thông báo", 2);
         else if(this.txtMaSach.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã sách không được lớn hơn 10 ký tự", "thông báo", 2);
         else {
-            if(sachdata.DeleteSach(this.txtMaSach.getText())) {
+            if(sachdata.DeleteSach(filesach,this.txtMaSach.getText())) {
                 JOptionPane.showMessageDialog(null, "Bạn đã xóa thành công", "Thông báo", 1);
+//                UpdateTable.LoadData(filesach, tbSach);
             }
             else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
             this.btLookSach.doClick();
@@ -1012,6 +1041,10 @@ public class JAdminUpdate extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Co loi xay ra"+ex);
         }
     }//GEN-LAST:event_btTraActionPerformed
+
+    private void txtMaSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaSachActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMaSachActionPerformed
 
     /**
      * @param args the command line arguments

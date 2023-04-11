@@ -6,8 +6,13 @@
 package Controllers;
 
 import Models.Sach;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -28,47 +33,143 @@ public class SachData {
         }
     }
     
-     public static void InsertSach(Sach s) {
-        String sql = "insert into SACH values(?,?,?,?,?,?)";
-        try {
-            ps = Connect.getConnect().prepareStatement(sql);
-            ps.setString(1, s.getMaSach());
-            ps.setString(2, s.getTenSach());
-            ps.setString(3, s.getTenTacGia());
-            ps.setString(4, s.getNhaXB());
-            ps.setInt(5, s.getGiaTien());
-            ps.setInt(6, s.getSoLuong());
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Đã thêm sách thành công!" , "Thông báo", 1);
-        } catch(Exception e) {
-            JOptionPane.showMessageDialog(null, "Sach không được thêm" , "Thông báo", 1);
+    public static boolean InsertSach(String filePath, Sach s) {
+    try {
+        // Đọc dữ liệu từ file txt và lưu vào một danh sách các đối tượng Sach
+        List<Sach> sachList = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length == 6) {
+                Sach sach = new Sach(parts[0], parts[1], parts[2], parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5]));
+                sachList.add(sach);
+            } else {
+                System.out.println("Invalid data: " + line);
+            }
         }
+        reader.close();
+
+        // Kiểm tra xem mã sách mới đã tồn tại trong danh sách chưa
+        boolean found = false;
+        for (Sach sach : sachList) {
+            if (sach.getMaSach().equals(s.getMaSach())) {
+                found = true;
+                break;
+            }
+        }
+
+        // Nếu mã sách mới không tồn tại trong danh sách thì thêm vào danh sách
+        if (!found) {
+            sachList.add(s);
+        } else {
+            System.out.println("Ma sach da ton tai: " + s.getMaSach());
+            JOptionPane.showMessageDialog(null, "Mã sách đã tồn tại!", "Thông báo", 2);
+        }
+
+        // Ghi lại danh sách các đối tượng Sach vào file txt
+        FileWriter writer = new FileWriter(filePath);
+        for (Sach sach : sachList) {
+            writer.write(sach.toString() + "\n");
+        }
+        writer.close();
+
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
+}
+
+    public boolean UpdateSach(String filePath, Sach s) {
+    try {
+        // Đọc dữ liệu từ file txt và lưu vào một danh sách các đối tượng Sach
+        List<Sach> sachList = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+           if(parts.length == 6){
+                Sach sach = new Sach(parts[0], parts[1], parts[2], parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5]));
+            sachList.add(sach);
+           }else{
+               System.out.println("Invalid data: " + line);
+           }
+        }
+        reader.close();
+        
+        // Cập nhật dữ liệu trong danh sách các đối tượng Sach
+        for (Sach sach : sachList) {
+            if (sach.getMaSach().equals(s.getMaSach())) {
+                sach.setTenSach(s.getTenSach());
+                sach.setTenTacGia(s.getTenTacGia());
+                sach.setNhaXB(s.getNhaXB());
+                sach.setGiaTien(s.getGiaTien());
+                sach.setSoLuong(s.getSoLuong());
+                break;
+            }
+        }
+        
+        // Ghi lại danh sách các đối tượng Sach vào file txt
+        FileWriter writer = new FileWriter(filePath);
+        for (Sach sach : sachList) {
+            writer.write(sach.toString() + "\n");
+        }
+        writer.close();
+        
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
     
-    public boolean UpdateSach(Sach s) {
-        try {
-            ps = Connect.getConnect().prepareStatement("UPDATE SACH SET  Ten_Sach = ?, Ten_Tac_gia = ?,"
-                    + "Nha_xb = ?, Gia_tien = ?, So_luong = ? where Ma_Sach = ?");
-            ps.setString(6, s.getMaSach());
-            ps.setString(1, s.getTenSach());
-            ps.setString(2, s.getTenTacGia());
-            ps.setString(3, s.getNhaXB());
-            ps.setInt(4, s.getGiaTien());
-            ps.setInt(5, s.getSoLuong());
-            return ps.executeUpdate() >0;
-        } catch (Exception e) {
-            
+   public static boolean DeleteSach(String filePath, String maSach) {
+    try {
+        // Đọc dữ liệu từ file txt và lưu vào một danh sách các đối tượng Sach
+        List<Sach> sachList = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length == 6) {
+                Sach sach = new Sach(parts[0], parts[1], parts[2], parts[3], Integer.parseInt(parts[4]), Integer.parseInt(parts[5]));
+                sachList.add(sach);
+            } else {
+                System.out.println("Invalid data: " + line);
+            }
+        }
+        reader.close();
+
+        // Tìm và xóa đối tượng Sach có mã sách trùng với maSach
+        Sach sachToRemove = null;
+        for (Sach sach : sachList) {
+            if (sach.getMaSach().equals(maSach)) {
+                sachToRemove = sach;
+                break;
+            }
+        }
+
+        if (sachToRemove != null) {
+            sachList.remove(sachToRemove);
+        } else {
+            System.out.println("Khong tim thay sach co ma: " + maSach);
             return false;
         }
-    }
-    
-    public boolean DeleteSach(String ms) {
-        try {
-            ps = Connect.getConnect().prepareStatement("DELETE FROM SACH WHERE Ma_Sach = ?");
-            ps.setString(1, ms);
-            return ps.executeUpdate() >0;
-        } catch(Exception e) {
-            return false;
+
+        // Ghi lại danh sách các đối tượng Sach vào file txt
+        FileWriter writer = new FileWriter(filePath);
+        for (Sach sach : sachList) {
+            writer.write(sach.toString() + "\n");
         }
+        writer.close();
+
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
+}
+
 }
