@@ -6,7 +6,6 @@
 package Views;
 
 import Controllers.AdminData;
-import Controllers.Connect;
 import Controllers.KhachHangData;
 import Models.Admin;
 import Models.KhachHang;
@@ -23,7 +22,7 @@ public class Login extends javax.swing.JFrame {
     
     public Login() {
         initComponents();
-        this.lbConnect.setText(Connect.testConnect());
+//        this.lbConnect.setText(Connect.testConnect());
         this.setLocation(300, 200);
     }
 

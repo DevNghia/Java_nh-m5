@@ -5,7 +5,7 @@
  */
 package Views;
 
-import Controllers.Connect;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 public class UpdateTable {
     public static PreparedStatement ps = null;
     public static ResultSet rs = null;
-    public static Connection con = Connect.getConnect();
+//    public static Connection con = Connect.getConnect();
     public static String filesach = "D:\\file.txt";
     
 //    public static void LoadData (String sql,JTable tb) {
@@ -66,7 +66,7 @@ public class UpdateTable {
     
     public static ResultSet ShowTextField(String sql) {
         try{
-            ps = con.prepareStatement(sql);
+//            ps = con.prepareStatement(sql);
             return ps.executeQuery(); 
         }
         catch(Exception e) {

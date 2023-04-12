@@ -5,7 +5,7 @@
  */
 package Views;
 
-import Controllers.Connect;
+
 import Controllers.KhachHangData;
 import Controllers.PhieuMuonData;
 import Controllers.SachData;
@@ -942,7 +942,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
         String sql = "UPDATE SACH SET So_luong = ? where Ma_Sach = ?";
         String sql1 = "SELECT So_luong from SACH where Ma_Sach = '"+this.txtSachMuon.getText()+"'";
         try {
-            ps = Connect.getConnect().prepareStatement(sql);
+//            ps = Connect.getConnect().prepareStatement(sql);
             ResultSet rs = UpdateTable.ShowTextField(sql1);
             ps.setString(2,this.txtSachMuon.getText());
             int count = 0;
@@ -1011,14 +1011,14 @@ public class JAdminUpdate extends javax.swing.JFrame {
         
          
         try {
-            ps2 = Connect.getConnect().prepareStatement(sql2);
+//            ps2 = Connect.getConnect().prepareStatement(sql2);
              ps2.setString(1, this.txtMaPhieuMuon.getText());
       
               ps2.execute();
            
             this.btLookMuon.doClick();
             
-            ps = Connect.getConnect().prepareStatement(sql);
+//            ps = Connect.getConnect().prepareStatement(sql);
             ResultSet rs = UpdateTable.ShowTextField(sql1);
             try{
             ps.setString(2,this.txtSachMuon.getText());     

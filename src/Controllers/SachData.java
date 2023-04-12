@@ -24,14 +24,14 @@ public class SachData {
     public static PreparedStatement ps;
     public static ResultSet rs;
     
-    public static ResultSet showTextfield(String sql) {
-        try {
-            ps = Connect.getConnect().prepareStatement(sql);
-            return ps.executeQuery();
-        } catch (Exception e) {
-            return null;
-        }
-    }
+//    public static ResultSet showTextfield(String sql) {
+//        try {
+//            ps = Connect.getConnect().prepareStatement(sql);
+//            return ps.executeQuery();
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
     
     public static boolean InsertSach(String filePath, Sach s) {
     try {

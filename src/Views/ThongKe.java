@@ -5,7 +5,6 @@
  */
 package Views;
 
-import Controllers.Connect;
 import static Views.UpdateTable.ps;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -33,7 +32,7 @@ public class ThongKe extends javax.swing.JFrame {
     public JButton inbc() {
         return jButton2;
     }
-    public static Connection con = Connect.getConnect();
+//    public static Connection con = Connect.getConnect();
     
     /**
      * Creates new form ThongKe
