@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import java.util.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -722,17 +724,18 @@ public class JAdminUpdate extends javax.swing.JFrame {
 
     private void btLookSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookSachActionPerformed
         // TODO add your handling code here:
-        if(this.txtLookSach.getText().length() == 0) {
-            String sql1 = "SELECT * from SACH ";
+        try {
+        String searchText = this.txtLookSach.getText();
+        if(searchText.length() == 0){
             UpdateTable.LoadData(filesach, tbSach);
+        }else{
+            List<String[]> sachList = UpdateTable.getDataFromTextFile(filesach);
+            List<String[]> searchData = SachData.searchSach(sachList, searchText);
+            UpdateTable.LoadData1(searchData, tbSach);
         }
-        else {
-            String sql1 = "SELECT * from SACH WHERE Ma_Sach like N'%"+this.txtLookSach.getText()+"%' "
-            + "or Ten_Sach like N'%"+this.txtLookSach.getText()+"%'"
-            + "or Ten_Tac_gia like N'%"+this.txtLookSach.getText()+"%'"
-            + "or Nha_Xb like N'%"+this.txtLookSach.getText()+"%'";
-            UpdateTable.LoadData(filesach, tbSach);
-        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
 
     }//GEN-LAST:event_btLookSachActionPerformed
 

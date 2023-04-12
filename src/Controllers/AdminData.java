@@ -41,34 +41,34 @@ public class AdminData {
         return ad;
     }
     
-    public static ResultSet showTextfield(String sql) {
-        try {
-            ps = Connect.getConnect().prepareStatement(sql);
-            return ps.executeQuery();
-        } catch (Exception e) {
-            return null;
-        }
-        
-    }
+//    public static ResultSet showTextfield(String sql) {
+//        try {
+//            ps = Connect.getConnect().prepareStatement(sql);
+//            return ps.executeQuery();
+//        } catch (Exception e) {
+//            return null;
+//        }
+//        
+//    }
     
-    public boolean UpdateAdmin(Admin ad) {
-        try {
-            ps = Connect.getConnect().prepareStatement("UPDATE QUAN_TRI SET Password = ? where Ma_Admin = ?");
-            ps.setString(2, ad.getMaAdmin());
-            ps.setString(1, ad.getPassword());
-            return ps.executeUpdate() >0;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+//    public boolean UpdateAdmin(Admin ad) {
+//        try {
+//            ps = Connect.getConnect().prepareStatement("UPDATE QUAN_TRI SET Password = ? where Ma_Admin = ?");
+//            ps.setString(2, ad.getMaAdmin());
+//            ps.setString(1, ad.getPassword());
+//            return ps.executeUpdate() >0;
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
     
-    public boolean DeleteAdmin(String maAd) {
-        try {
-            ps = Connect.getConnect().prepareStatement("DELETE FROM QUAN_TRI WHERE Ma_Admin = ?");
-            ps.setString(1, maAd);
-            return ps.executeUpdate() >0;
-        } catch(Exception e) {
-            return false;
-        }
-    }
+//    public boolean DeleteAdmin(String maAd) {
+//        try {
+//            ps = Connect.getConnect().prepareStatement("DELETE FROM QUAN_TRI WHERE Ma_Admin = ?");
+//            ps.setString(1, maAd);
+//            return ps.executeUpdate() >0;
+//        } catch(Exception e) {
+//            return false;
+//        }
+//    }
 }

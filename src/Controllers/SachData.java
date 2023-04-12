@@ -33,6 +33,20 @@ public class SachData {
 //        }
 //    }
     
+    public static List<String[]> searchSach(List<String[]> sachList, String searchQuery) {
+    List<String[]> result = new ArrayList<>();
+    for (String[] sach : sachList) {
+        if (sach[0].toLowerCase().contains(searchQuery.toLowerCase()) ||
+            sach[1].toLowerCase().contains(searchQuery.toLowerCase()) ||
+            sach[2].toLowerCase().contains(searchQuery.toLowerCase()) ||
+            sach[3].toLowerCase().contains(searchQuery.toLowerCase())) {
+            result.add(sach);
+        }
+    }
+    return result;
+}
+
+    
     public static boolean InsertSach(String filePath, Sach s) {
     try {
         // Đọc dữ liệu từ file txt và lưu vào một danh sách các đối tượng Sach

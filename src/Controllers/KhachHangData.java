@@ -23,7 +23,7 @@ public class KhachHangData {
     public KhachHang dangNhap(String taiKhoan, String pass) {
         KhachHang kh = null;
         try{
-            ps = Connect.getConnect().prepareStatement("SELECT * FROM KHACH_HANG where Ma_Khach_hang = ? and Password=?");
+//            ps = Connect.getConnect().prepareStatement("SELECT * FROM KHACH_HANG where Ma_Khach_hang = ? and Password=?");
             ps.setString(1, taiKhoan);
             ps.setString(2, pass);
             rs = ps.executeQuery();
@@ -46,7 +46,7 @@ public class KhachHangData {
     
     public static ResultSet showTextfield(String sql) {
         try {
-            ps = Connect.getConnect().prepareStatement(sql);
+//            ps = Connect.getConnect().prepareStatement(sql);
             return ps.executeQuery();
         } catch (Exception e) {
             return null;
@@ -56,7 +56,7 @@ public class KhachHangData {
      public static void InsertKhachHang(KhachHang kh) {
         String sql = "insert into KHACH_HANG values(?,?,?,?,?,?)";
         try {
-            ps = Connect.getConnect().prepareStatement(sql);
+//            ps = Connect.getConnect().prepareStatement(sql);
             ps.setString(1, kh.getMaKH());
             ps.setString(2, kh.getPass());
             ps.setString(3, kh.getName());
@@ -72,8 +72,8 @@ public class KhachHangData {
     
     public boolean UpdateKhachHang(KhachHang kh) {
         try {
-            ps = Connect.getConnect().prepareStatement("UPDATE KHACH_HANG SET Password = ?, Ten_Khach_hang = ?,"
-                    + "Ngay_sinh = ?, Dia_chi = ?, Phone = ? where Ma_Khach_hang = ?");
+//            ps = Connect.getConnect().prepareStatement("UPDATE KHACH_HANG SET Password = ?, Ten_Khach_hang = ?,"
+//                    + "Ngay_sinh = ?, Dia_chi = ?, Phone = ? where Ma_Khach_hang = ?");
             ps.setString(6, kh.getMaKH());
             ps.setString(1, kh.getPass());
             ps.setString(2, kh.getName());
@@ -88,7 +88,7 @@ public class KhachHangData {
     
     public boolean DeleteKhachHang(String maKH) {
         try {
-            ps = Connect.getConnect().prepareStatement("DELETE FROM KHACH_HANG WHERE Ma_Khach_hang = ?");
+//            ps = Connect.getConnect().prepareStatement("DELETE FROM KHACH_HANG WHERE Ma_Khach_hang = ?");
             ps.setString(1, maKH);
             return ps.executeUpdate() >0;
         } catch(Exception e) {

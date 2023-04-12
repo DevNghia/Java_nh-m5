@@ -25,7 +25,8 @@ public class UpdateTable {
     public static PreparedStatement ps = null;
     public static ResultSet rs = null;
 //    public static Connection con = Connect.getConnect();
-    public static String filesach = "D:\\file.txt";
+   public static String filesach = "D:\\sach.txt";
+    
     
 //    public static void LoadData (String sql,JTable tb) {
 //        try{
@@ -62,6 +63,26 @@ public class UpdateTable {
         JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
     }
 }
+   public static void LoadData1(List<String[]> fileName, JTable tb) {
+    try {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Mã sách");
+        model.addColumn("Tên sách");
+        model.addColumn("NXB");
+        model.addColumn("Tên tác giả");
+        model.addColumn("Giá");
+        model.addColumn("Số lượng");
+
+        for (String[] data : fileName) {
+            model.addRow(data);
+        }
+        tb.setModel(model);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
+    }
+}
+
 
     
     public static ResultSet ShowTextField(String sql) {
