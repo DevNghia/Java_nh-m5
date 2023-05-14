@@ -62,24 +62,6 @@ public class ThongKe extends javax.swing.JFrame {
             
         }
         ResultSet rs = null ;
-//        try {
-//            ps = con.prepareStatement(sql);
-//            rs = ps.executeQuery();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ThongKe.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        List l;
-//        l=DbUtils.resultSetToNestedList(rs);
-//        this.taBaoCao.append(this.lbTongSach.getText()+"\n");
-//        this.taBaoCao.append(this.lbTongKhach.getText()+"\n");
-//        this.taBaoCao.append(this.lbTongPhieu.getText()+"\n");
-//        this.taBaoCao.append(this.lbTongKhachMuon.getText()+"\n");
-//        this.taBaoCao.append(this.lbTongPhieuQuaHan.getText()+"\n\n");
-//        this.taBaoCao.append("| Mã PM    | Mã KH    | Mã sách | Ngày mượn | Hạn trả      |Tiền cọc|Ngày Trả |\n");
-//        for(int i=1;i<l.size();i++){
-//             this.taBaoCao.append(this.lbTongPhieuQuaHan.getText()+"\n\n");
-//          this.taBaoCao.append(l.get(i).toString()+"\n");     
-//        }
        
     }
 

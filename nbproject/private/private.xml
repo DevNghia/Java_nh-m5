@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/BTL_QuanLyThuVien_haui-master/src/Controllers/SachData.java</file>
-            <file>file:/D:/BTL_QuanLyThuVien_haui-master/src/Views/JAdminUpdate.java</file>
-            <file>file:/D:/BTL_QuanLyThuVien_haui-master/src/Models/Sach.java</file>
-            <file>file:/D:/BTL_QuanLyThuVien_haui-master/src/Views/UpdateTable.java</file>
+            <file>file:/D:/java-haui/Java_nh-m5/src/Controllers/KhachHangData.java</file>
+            <file>file:/D:/java-haui/Java_nh-m5/src/Controllers/AdminData.java</file>
+            <file>file:/D:/java-haui/Java_nh-m5/src/Controllers/Connect.java</file>
         </group>
     </open-files>
 </project-private>
