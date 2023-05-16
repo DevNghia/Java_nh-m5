@@ -17,12 +17,16 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import java.util.*;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -36,23 +40,39 @@ public class JAdminUpdate extends javax.swing.JFrame {
     PhieuMuonData phieumuondata = new PhieuMuonData();
     public static PreparedStatement ps = null;
     public static PreparedStatement ps2 = null;
-    public static String sqlSach = "SELECT * FROM SACH order by Ma_Sach asc";
-    public static String sqlKhach = "SELECT * FROM KHACH_HANG order by Ma_Khach_hang asc";
-    public static String sqlPhieu = "SELECT * FROM PHIEU_MUON order by Ma_Phieu_muon asc";
+//    public static String sqlSach = "SELECT * FROM SACH order by Ma_Sach asc";
+//    public static String sqlKhach = "SELECT * FROM KHACH_HANG order by Ma_Khach_hang asc";
+//    public static String sqlPhieu = "SELECT * FROM PHIEU_MUON order by Ma_Phieu_muon asc";
     public static String filesach = "D:\\sach.txt";
+    public static String filemuon = "D:\\muon.txt";
+    public static String filekhach = "D:\\khach.txt";
     /**
      * Creates new form JAdminUpdate
      */
+//    public JAdminUpdate() {
+//        this.setLocation(100, 10);
+//        initComponents();
+//        UpdateTable.LoadData(filesach, tbSach);
+////        UpdateTable.LoadData(sqlKhach, tbKhach);
+////        UpdateTable.LoadData(sqlPhieu, tbMuon);
+//        ProcessCrt(false);
+//        ProcessCrt2(false);
+//        ProcessCrt3(false);
+//    }
+    
     public JAdminUpdate() {
         this.setLocation(100, 10);
         initComponents();
+        
         UpdateTable.LoadData(filesach, tbSach);
-//        UpdateTable.LoadData(sqlKhach, tbKhach);
-//        UpdateTable.LoadData(sqlPhieu, tbMuon);
+        UpdateTable.LoadData2(filemuon, tbMuon);
+        UpdateTable.LoadData3(filesach, tbKhach);
         ProcessCrt(false);
         ProcessCrt2(false);
         ProcessCrt3(false);
     }
+    
+   
     
     public void ProcessCrt(boolean b) {
         this.btAddSach.setEnabled(b);
@@ -176,6 +196,12 @@ public class JAdminUpdate extends javax.swing.JFrame {
         jLabel4.setText("Tên tác giả");
 
         jLabel5.setText("Nhà xuất bản");
+
+        txtLookSach.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtLookSachActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Giá tiền");
 
@@ -308,6 +334,12 @@ public class JAdminUpdate extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Cập nhật sách", jPanel2);
 
+        txtNgayMuon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNgayMuonActionPerformed(evt);
+            }
+        });
+
         jLabel19.setText("Mã phiếu mượn");
 
         jLabel20.setText("Mã Khách Hàng");
@@ -333,6 +365,12 @@ public class JAdminUpdate extends javax.swing.JFrame {
         jLabel21.setText("Mã Sách");
 
         jLabel22.setText("Ngày mượn");
+
+        txtLookPhieu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtLookPhieuActionPerformed(evt);
+            }
+        });
 
         jLabel23.setText("Hạn trả");
 
@@ -402,11 +440,6 @@ public class JAdminUpdate extends javax.swing.JFrame {
                                     .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
                                     .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(182, 182, 182)
-                                .addComponent(btLookMuon)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtLookPhieu, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addGap(73, 73, 73)
                                 .addComponent(btAddPhieu)
                                 .addGap(121, 121, 121)
@@ -414,7 +447,12 @@ public class JAdminUpdate extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
                                 .addComponent(btDelPhieu)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btTra)))
+                                .addComponent(btTra))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(182, 182, 182)
+                                .addComponent(btLookMuon)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtLookPhieu, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtNgayMuon, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
@@ -591,7 +629,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                                 .addComponent(btDelKhach)
                                 .addGap(80, 80, 80))))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -615,16 +653,16 @@ public class JAdminUpdate extends javax.swing.JFrame {
                     .addComponent(txtNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
                     .addComponent(jLabel12)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
                     .addComponent(jLabel13)
                     .addComponent(txtTenKhach, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(28, Short.MAX_VALUE))
@@ -643,7 +681,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 605, Short.MAX_VALUE)
+            .addGap(0, 610, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -673,8 +711,8 @@ public class JAdminUpdate extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btRet)
                 .addContainerGap())
         );
@@ -913,49 +951,57 @@ public class JAdminUpdate extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbMuonMouseClicked
 
-    private void btLookMuonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookMuonActionPerformed
+    private void tbMuonMouseClicked2(java.awt.event.MouseEvent evt) {                                    
         // TODO add your handling code here:
-        if(this.txtLookPhieu.getText().length() == 0) {
-            String sql1 = "SELECT * from PHIEU_MUON ";
-            UpdateTable.LoadData(sql1, tbMuon);
-        }
-        else {
-            String sql1 = "SELECT * from PHIEU_MUON WHERE Ma_Phieu_muon like N'%"+this.txtLookPhieu.getText()+"%' "
-                    + "or Ma_Khach_hang like N'%"+this.txtLookPhieu.getText()+"%' or Ma_Sach like N'%"+this.txtLookPhieu.getText()+"%'";
-            UpdateTable.LoadData(sql1, tbMuon);
-        }
-    }//GEN-LAST:event_btLookMuonActionPerformed
-
-    private void btAddPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddPhieuActionPerformed
-        // TODO add your handling code here
+        ProcessCrt3(true);
+        this.btAddPhieu.setEnabled(false);
         try{
-             if (this.txtMaPhieuMuon.getText().length()==0 ) 
-                 JOptionPane.showMessageDialog(null, "Mã phiếu mượn không thể bỏ trống", "thông báo", 2);
-            else if(this.txtMaPhieuMuon.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã phiếu mượn không được lớn hơn 10 ký tự", "thông báo", 2);
-            else {
-            PhieuMuon p = new PhieuMuon(this.txtMaPhieuMuon.getText(),this.txtNguoiMuon.getText(),this.txtSachMuon.getText(),
-                    Date.valueOf(this.txtNgayMuon.getText()),Date.valueOf(this.txtHanTra.getText()));
-            PhieuMuonData.InsertPhieu(p);
-            this.btLookMuon.doClick();
-        }
-        }catch(Exception e) {
-            JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
-        }
-        
-        String sql = "UPDATE SACH SET So_luong = ? where Ma_Sach = ?";
-        String sql1 = "SELECT So_luong from SACH where Ma_Sach = '"+this.txtSachMuon.getText()+"'";
-        try {
-//            ps = Connect.getConnect().prepareStatement(sql);
+            int row = this.tbMuon.getSelectedRow();
+            String IDrow = (this.tbMuon.getModel().getValueAt(row, 0)).toString();
+            String sql1 = "SELECT * FROM PHIEU_MUON where Ma_Phieu_muon='"+IDrow+"'";
             ResultSet rs = UpdateTable.ShowTextField(sql1);
-            ps.setString(2,this.txtSachMuon.getText());
-            int count = 0;
-            if(rs.next()) count = rs.getInt("So_luong");
-            ps.setInt(1, count-1);
-            ps.execute();
-            this.btLookSach.doClick();
-        } catch (Exception ex) {
+            if(rs.next()) {
+                this.txtMaPhieuMuon.setText(rs.getString("Ma_Phieu_muon"));
+                this.txtNguoiMuon.setText(rs.getString("Ma_Khach_hang"));
+                this.txtSachMuon.setText(rs.getString("Ma_Sach"));
+                this.txtNgayMuon.setText(rs.getString("Ngay_muon"));
+                this.txtHanTra.setText(rs.getString("Han_tra"));
+                
+            }
+        }catch(Exception e) {
+            
         }
+    }       
+    private void btLookMuonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookMuonActionPerformed
+          //code check thoong tin phieu muon
+          
+            String namelookphieu = txtLookPhieu.getText();
+            if(namelookphieu.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Mã phiếu mượn không thể bỏ trống", "thông báo", 2);
+            }
         
+    }//GEN-LAST:event_btLookMuonActionPerformed
+// cap nhat phieu muon 
+    //them phieu 
+    private void btAddPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddPhieuActionPerformed
+            // TODO add your handling code here
+           try {
+    DateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+    dt.setLenient(false); // Đảm bảo rằng định dạng ngày tháng phải chính xác
+java.util.Date ngayMuon = dt.parse(this.txtNgayMuon.getText());
+    java.util.Date hanTra = dt.parse(this.txtHanTra.getText());
+    PhieuMuon pm = new PhieuMuon(
+        this.txtMaPhieuMuon.getText(),
+        this.txtNguoiMuon.getText(),
+        this.txtSachMuon.getText(),
+       ngayMuon,
+       hanTra
+    );
+
+    PhieuMuonData.InsertPhieu(filemuon, pm);
+} catch (ParseException e) {
+    e.printStackTrace();
+}
     }//GEN-LAST:event_btAddPhieuActionPerformed
 
     private void btEditPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditPhieuActionPerformed
@@ -1048,6 +1094,18 @@ public class JAdminUpdate extends javax.swing.JFrame {
     private void txtMaSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaSachActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMaSachActionPerformed
+
+    private void txtLookPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLookPhieuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLookPhieuActionPerformed
+
+    private void txtLookSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLookSachActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLookSachActionPerformed
+
+    private void txtNgayMuonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayMuonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNgayMuonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1156,4 +1214,8 @@ public class JAdminUpdate extends javax.swing.JFrame {
     private javax.swing.JTextField txtTenSach;
     private javax.swing.JTextField txtTenTacGia;
     // End of variables declaration//GEN-END:variables
+
+    private boolean isStringEmpty(String namelookphieu) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

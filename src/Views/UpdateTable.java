@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import net.proteanit.sql.DbUtils;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +62,60 @@ public class UpdateTable {
         JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
     }
 }
+    //title phieu muon
+    public static void LoadData2(String fileName, JTable tb) {
+    try {
+        FileReader fr = new FileReader(fileName);
+        BufferedReader br = new BufferedReader(fr);
+
+        String line;
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Mã phiếu mượn");
+        model.addColumn("Mã khách hàng");
+        model.addColumn("Mã sách");
+        model.addColumn("Ngày mượn");
+        model.addColumn("Hạn trả");
+        //Thêm các cột khác nếu cần thiết
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split(","); //Phân tách dữ liệu bằng khoảng trắng hoặc dấu phẩy hoặc ký tự khác nếu có
+            model.addRow(data);
+        }
+        tb.setModel(model);
+        br.close();
+        fr.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
+    }
+}
+    
+    //title cap  nhat khach hang
+    public static void LoadData3(String fileName, JTable tb) {
+    try {
+        FileReader fr = new FileReader(fileName);
+        BufferedReader br = new BufferedReader(fr);
+
+        String line;
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Mã khách hàng");
+        model.addColumn("Tên khách hàng");
+        model.addColumn("Mật khẩu");
+        model.addColumn("Ngày sinh");
+        model.addColumn("Địa chỉ");
+        model.addColumn("Số điện thoại");
+        
+        //Thêm các cột khác nếu cần thiết
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split(","); //Phân tách dữ liệu bằng khoảng trắng hoặc dấu phẩy hoặc ký tự khác nếu có
+            model.addRow(data);
+        }
+        tb.setModel(model);
+        br.close();
+        fr.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
+    }
+}
+    
    public static void LoadData1(List<String[]> fileName, JTable tb) {
     try {
         DefaultTableModel model = new DefaultTableModel();
@@ -72,7 +125,7 @@ public class UpdateTable {
         model.addColumn("Tên tác giả");
         model.addColumn("Giá");
         model.addColumn("Số lượng");
-
+        
         for (String[] data : fileName) {
             model.addRow(data);
         }
@@ -82,7 +135,26 @@ public class UpdateTable {
         JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
     }
 }
+// load data 2
+   public static void LoadData2(List<String[]> fileName, JTable tb) {
+    try {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Mã sách");
+        model.addColumn("Tên sách");
+        model.addColumn("NXB");
+        model.addColumn("Tên tác giả");
+        model.addColumn("Giá");
+        model.addColumn("Số lượng");
+        
+        for (String[] data : fileName) {
+            model.addRow(data);
+        }
+        tb.setModel(model);
 
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
+    }
+}
 
     
     public static ResultSet ShowTextField(String sql) {
