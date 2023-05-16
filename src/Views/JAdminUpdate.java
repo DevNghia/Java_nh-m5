@@ -46,7 +46,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
     public JAdminUpdate() {
         this.setLocation(100, 10);
         initComponents();
-        UpdateTable.LoadData(filesach, tbSach);
+        UpdateTable.LoadData(filesach, tbMuon);
 //        UpdateTable.LoadData(sqlKhach, tbKhach);
 //        UpdateTable.LoadData(sqlPhieu, tbMuon);
         ProcessCrt(false);
@@ -686,22 +686,6 @@ public class JAdminUpdate extends javax.swing.JFrame {
         // TODO add your handling code here:
         ProcessCrt(true);
         this.btAddSach.setEnabled(false);
-//        try{
-//            int row = this.tbSach.getSelectedRow();
-//            String IDrow = (this.tbSach.getModel().getValueAt(row, 0)).toString();
-//            String sql1 = "SELECT * FROM SACH where Ma_Sach='"+IDrow+"'";
-//            ResultSet rs = UpdateTable.ShowTextField(sql1);
-//            if(rs.next()) {
-//                this.txtMaSach.setText(rs.getString("Column 1"));
-//                this.txtTenSach.setText(rs.getString("Column 2"));
-//                this.txtNhaXb.setText(rs.getString("Nha_Xb"));
-//                this.txtTenTacGia.setText(rs.getString("Ten_Tac_gia"));
-//                this.txtGia.setText((rs.getString("Gia_tien")));
-//                this.txtSoLuong.setText(rs.getString("So_luong"));
-//            }
-//        }catch(Exception e) {
-//            
-//        }
      try{
         int row = this.tbSach.getSelectedRow();
         String IDrow = (this.tbSach.getModel().getValueAt(row, 0)).toString();
@@ -710,7 +694,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
             if (rows[0].equals(IDrow)) {
                 this.txtMaSach.setText(rows[0]);
                 this.txtTenSach.setText(rows[1]);
-                this.txtNhaXb.setText(rows[2]);
+                this.txtNhaXb.setText(rows[2]); 
                 this.txtTenTacGia.setText(rows[3]);
                 this.txtGia.setText(rows[4]);
                 this.txtSoLuong.setText(rows[5]);

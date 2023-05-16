@@ -5,7 +5,10 @@
  */
 package Views;
 
+import Controllers.SachData;
 import java.sql.ResultSet;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,7 +16,8 @@ import java.sql.ResultSet;
  */
 public class JKhachHang extends javax.swing.JFrame {
 
-    public static String sql = "SELECT * FROM SACH order by Ma_Sach asc";
+//    public static String sql = "SELECT * FROM SACH order by Ma_Sach asc";
+    public static String sql = "D:\\sach.txt";
     
     
     public JKhachHang() {
@@ -79,6 +83,12 @@ public class JKhachHang extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
+
+        txtLook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtLookActionPerformed(evt);
+            }
+        });
 
         btLook.setText("Tìm kiếm");
         btLook.addActionListener(new java.awt.event.ActionListener() {
@@ -174,18 +184,20 @@ public class JKhachHang extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         try{
-            int row = this.jTable1.getSelectedRow();
-            String IDrow = (this.jTable1.getModel().getValueAt(row, 0)).toString();
-            String sql1 = "SELECT * FROM SACH where Ma_Sach='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaSach.setText(rs.getString("Ma_Sach"));
-                this.txtTenSach.setText(rs.getString("Ten_Sach"));
-                this.txtNhaXb.setText(rs.getString("Nha_Xb"));
-                this.txtTenTacGia.setText(rs.getString("Ten_Tac_gia"));
-                this.txtGia.setText((rs.getString("Gia_tien")));
-                this.txtSoLuong.setText(rs.getString("So_luong"));
+           int row = this.jTable1.getSelectedRow();
+        String IDrow = (this.jTable1.getModel().getValueAt(row, 0)).toString();
+        List<String[]> data = UpdateTable.getDataFromTextFile(sql);
+        for (String[] rows : data) {
+            if (rows[0].equals(IDrow)) {
+                this.txtMaSach.setText(rows[0]);
+                this.txtTenSach.setText(rows[1]);
+                this.txtNhaXb.setText(rows[3]);
+                this.txtTenTacGia.setText(rows[2]);
+                this.txtGia.setText(rows[4]);
+                this.txtSoLuong.setText(rows[5]);
+                break;
             }
+        }
         }catch(Exception e) {
             
         }
@@ -193,18 +205,18 @@ public class JKhachHang extends javax.swing.JFrame {
 
     private void btLookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookActionPerformed
         // TODO add your handling code here:
-        if(this.txtLook.getText().length() == 0) {
-            String sql1 = "SELECT * from SACH ";
-            UpdateTable.LoadData(sql1, jTable1);
+         try {
+        String searchText = this.txtLook.getText();
+        if(searchText.length() == 0){
+            UpdateTable.LoadData(sql, jTable1);
+        }else{
+            List<String[]> sachList = UpdateTable.getDataFromTextFile(sql);
+            List<String[]> searchData = SachData.searchSach(sachList, searchText);
+            UpdateTable.LoadData1(searchData, jTable1);
         }
-        else {
-            String sql1 = "SELECT * from SACH WHERE Ma_Sach like N'%"+this.txtLook.getText()+"%' "
-                    + "or Ten_Sach like N'%"+this.txtLook.getText()+"%'"
-                    + "or Ten_Tac_gia like N'%"+this.txtLook.getText()+"%'"
-                    + "or Nha_xb like N'%"+this.txtLook.getText()+"%'";
-
-            UpdateTable.LoadData(sql1, jTable1);
-        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
         
         
     }//GEN-LAST:event_btLookActionPerformed
@@ -215,6 +227,10 @@ public class JKhachHang extends javax.swing.JFrame {
         login.setVisible(true);
         dispose();
     }//GEN-LAST:event_btLogoutActionPerformed
+
+    private void txtLookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLookActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLookActionPerformed
 
     /**
      * @param args the command line arguments

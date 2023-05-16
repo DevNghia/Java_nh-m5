@@ -7,6 +7,8 @@ package Controllers;
 
 import Models.KhachHang;
 import java.awt.HeadlessException;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,20 +24,18 @@ public class KhachHangData {
     
     public KhachHang dangNhap(String taiKhoan, String pass) {
         KhachHang kh = null;
-        try{
-//            ps = Connect.getConnect().prepareStatement("SELECT * FROM KHACH_HANG where Ma_Khach_hang = ? and Password=?");
-            ps.setString(1, taiKhoan);
-            ps.setString(2, pass);
-            rs = ps.executeQuery();
-            while(rs.next()) {
-                kh = new KhachHang();
-               // kh.setMaKH(rs.getString("Ma_Khach_hang"));
-               // kh.setPass(rs.getString("Password"));
-                kh.setBirth(rs.getDate("Ngay_sinh"));
-                kh.setName(rs.getString("Ten_Khach_hang"));
-                kh.setDiaChi(rs.getString("Dia_chi"));
-                kh.setPhone(rs.getString("Phone"));
+       try{
+            BufferedReader br = new BufferedReader(new FileReader("D:\\khachhang.txt"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data[0].equals(taiKhoan) && data[1].equals(pass)) {
+                    kh = new KhachHang();
+                    // Khởi tạo các thuộc tính cho đối tượng Admin ad ở đây
+                    break;
+                }
             }
+            br.close();
         }
         catch(Exception e) {
             return kh = null;

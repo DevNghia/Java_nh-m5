@@ -180,6 +180,9 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.JTextField" name="txtLook">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtLookActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btLook">
       <Properties>

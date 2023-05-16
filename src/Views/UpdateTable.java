@@ -47,8 +47,8 @@ public class UpdateTable {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Mã sách");
         model.addColumn("Tên sách");
-        model.addColumn("NXB");
         model.addColumn("Tên tác giả");
+          model.addColumn("NXB");
         model.addColumn("Giá");
         model.addColumn("Số lượng");
         //Thêm các cột khác nếu cần thiết
@@ -68,8 +68,8 @@ public class UpdateTable {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Mã sách");
         model.addColumn("Tên sách");
-        model.addColumn("NXB");
         model.addColumn("Tên tác giả");
+           model.addColumn("NXB");
         model.addColumn("Giá");
         model.addColumn("Số lượng");
 
@@ -115,7 +115,7 @@ public class UpdateTable {
     return data;
 }
 
-    public static boolean updateTextFile(String fileName, List<String[]> data) {
+    public static boolean updateTeupxtFile(String fileName, List<String[]> data) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
         for (String[] row : data) {
             writer.write(String.join(",", row));
