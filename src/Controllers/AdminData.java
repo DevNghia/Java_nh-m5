@@ -23,7 +23,7 @@ public class AdminData {
     public Admin dangNhap(String taiKhoan, String pass) {
         Admin ad = null;
         try{
-            BufferedReader br = new BufferedReader(new FileReader("D:\\account.dat"));
+            BufferedReader br = new BufferedReader(new FileReader("D:\\account.txt"));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");

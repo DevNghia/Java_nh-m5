@@ -5,6 +5,7 @@
  */
 package Models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -62,6 +63,12 @@ public class PhieuMuon {
     }
     public void setHanTra(Date ht) {
         this.hanTra = ht;
+    }
+
+    @Override
+    public String toString() {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return  maMuon + "," + maKhach + "," + maSach + "," +formatter.format(ngayMuon) + "," +  formatter.format(hanTra);
     }
     
     

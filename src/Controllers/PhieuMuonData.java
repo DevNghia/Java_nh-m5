@@ -10,9 +10,9 @@ import Models.Sach;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
@@ -33,10 +33,17 @@ public class PhieuMuonData {
         List<PhieuMuon> pmList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         String line;
+        
         while ((line = reader.readLine()) != null) {
             String[] parts = line.split(",");
+           
             if (parts.length == 5) {
-                PhieuMuon pm = new PhieuMuon(parts[0], parts[1], parts[2], Date.valueOf(parts[3]), Date.valueOf(parts[4]));
+                 String ngayMuonStr = parts[3];
+    String hanTraStr = parts[4];
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    Date ngayMuon = formatter.parse(ngayMuonStr);
+    Date hanTra = formatter.parse(hanTraStr);
+                PhieuMuon pm = new PhieuMuon(parts[0], parts[1], parts[2], ngayMuon, hanTra);
                 pmList.add(pm);
             } else {
                 System.out.println("Invalid data: " + line);
@@ -75,20 +82,20 @@ public class PhieuMuonData {
     }
 }
     
-//    public boolean UpdatePhieu(PhieuMuon p) {
-//        try {
-////            ps = Connect.getConnect().prepareStatement("UPDATE PHIEU_MUON SET  Ma_Khach_hang = ?, Ma_Sach = ?,"
-////                    + "Ngay_muon = ?, Han_tra = ? where Ma_Phieu_muon = ?");
-//            ps.setString(5, p.getMaMuon());
-//            ps.setString(1, p.getMaKhach());
-//            ps.setString(2, p.getSach());
-//            ps.setDate(3, p.getNgayMuon());
-//            ps.setDate(4, p.getHanTra());
-//            return ps.executeUpdate() >0;
-//        } catch (Exception e) {
-//            return false;
-//        }
-//    }
+    public boolean UpdatePhieu(PhieuMuon p) {
+        try {
+//            ps = Connect.getConnect().prepareStatement("UPDATE PHIEU_MUON SET  Ma_Khach_hang = ?, Ma_Sach = ?,"
+//                    + "Ngay_muon = ?, Han_tra = ? where Ma_Phieu_muon = ?");
+            ps.setString(5, p.getMaMuon());
+            ps.setString(1, p.getMaKhach());
+            ps.setString(2, p.getSach());
+            ps.setDate(3, p.getNgayMuon());
+            ps.setDate(4, p.getHanTra());
+            return ps.executeUpdate() >0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     
     public boolean DeletePhieu(String ms) {
         try {
