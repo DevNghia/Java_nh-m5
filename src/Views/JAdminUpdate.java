@@ -13,6 +13,7 @@ import Models.KhachHang;
 import Models.NhaXb;
 import Models.PhieuMuon;
 import Models.Sach;
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,6 +64,8 @@ public class JAdminUpdate extends javax.swing.JFrame {
     public JAdminUpdate() {
         this.setLocation(100, 10);
         initComponents();
+        btEditPhieu.setEnabled(false);
+        btDelPhieu.setEnabled(false);
         
         UpdateTable.LoadData(filesach, tbSach);
         UpdateTable.LoadData2(filemuon, tbMuon);
@@ -136,7 +139,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
         tbMuon = new javax.swing.JTable();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
-        txtLookPhieu = new javax.swing.JTextField();
+        txtSearchText = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
         btLookMuon = new javax.swing.JButton();
         txtMaPhieuMuon = new javax.swing.JTextField();
@@ -366,9 +369,9 @@ public class JAdminUpdate extends javax.swing.JFrame {
 
         jLabel22.setText("Ngày mượn");
 
-        txtLookPhieu.addActionListener(new java.awt.event.ActionListener() {
+        txtSearchText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLookPhieuActionPerformed(evt);
+                txtSearchTextActionPerformed(evt);
             }
         });
 
@@ -452,7 +455,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
                                 .addGap(182, 182, 182)
                                 .addComponent(btLookMuon)
                                 .addGap(18, 18, 18)
-                                .addComponent(txtLookPhieu, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)))
+                                .addComponent(txtSearchText, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtNgayMuon, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
@@ -465,7 +468,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(64, 64, 64)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtLookPhieu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearchText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btLookMuon)
                     .addComponent(btNewPhieu))
                 .addGap(39, 39, 39)
@@ -931,24 +934,24 @@ public class JAdminUpdate extends javax.swing.JFrame {
 
     private void tbMuonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbMuonMouseClicked
         // TODO add your handling code here:
-        ProcessCrt3(true);
-        this.btAddPhieu.setEnabled(false);
-        try{
-            int row = this.tbMuon.getSelectedRow();
-            String IDrow = (this.tbMuon.getModel().getValueAt(row, 0)).toString();
-            String sql1 = "SELECT * FROM PHIEU_MUON where Ma_Phieu_muon='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaPhieuMuon.setText(rs.getString("Ma_Phieu_muon"));
-                this.txtNguoiMuon.setText(rs.getString("Ma_Khach_hang"));
-                this.txtSachMuon.setText(rs.getString("Ma_Sach"));
-                this.txtNgayMuon.setText(rs.getString("Ngay_muon"));
-                this.txtHanTra.setText(rs.getString("Han_tra"));
-                
-            }
-        }catch(Exception e) {
+        int row = tbMuon.getSelectedRow();
+        if(row >= 0){
+            //lấy dữ liệu của dòng được chọn
+            String maPhieuMuon = tbMuon.getValueAt(row, 0).toString();
+            String nguoiMuon = tbMuon.getValueAt(row, 1).toString();
+            String sachMuon = tbMuon.getValueAt(row, 2).toString();
+            String ngayMuon = tbMuon.getValueAt(row, 3).toString();
+            String hanTra = tbMuon.getValueAt(row, 4).toString();
             
+            //hiển thị các thông tin vào các text box
+            txtMaPhieuMuon.setText(maPhieuMuon);
+            txtNguoiMuon.setText(nguoiMuon);
+            txtSachMuon.setText(sachMuon);
+            txtNgayMuon.setText(ngayMuon);
+            txtHanTra.setText(hanTra);
         }
+        btEditPhieu.setEnabled(true);
+        btDelPhieu.setEnabled(true);
     }//GEN-LAST:event_tbMuonMouseClicked
 
     private void tbMuonMouseClicked2(java.awt.event.MouseEvent evt) {                                    
@@ -971,67 +974,148 @@ public class JAdminUpdate extends javax.swing.JFrame {
         }catch(Exception e) {
             
         }
-    }       
+    }    
+    
+    //Le Van Hung
+    
+    
+    // tìm kiếm phiếu mượn
     private void btLookMuonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookMuonActionPerformed
-          //code check thoong tin phieu muon
-          
-            String namelookphieu = txtLookPhieu.getText();
-            if(namelookphieu.isEmpty()){
-                JOptionPane.showMessageDialog(null, "Mã phiếu mượn không thể bỏ trống", "thông báo", 2);
-            }
-        
+          if(txtSearchText.getText().length() == 0){
+            JOptionPane.showMessageDialog(null,"Mã phiếu không thể trống", "Thông báo", 2);
+            return ;
+        }
+        else{
+            PhieuMuonData.search(filemuon, txtSearchText.getText());
+            DefaultTableModel model = PhieuMuonData.search(filemuon, txtSearchText.getText());
+            tbMuon.setModel(model);
+        }
     }//GEN-LAST:event_btLookMuonActionPerformed
-// cap nhat phieu muon 
-    //them phieu 
+    //reset text box
+    public void ResetForm(){
+        txtMaPhieuMuon.setText("");
+        txtNguoiMuon.setText("");
+        txtSachMuon.setText("");
+        txtNgayMuon.setText("");
+        txtHanTra.setText("");
+    }
+    //tạo mới 1 phiếu mượn
     private void btAddPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddPhieuActionPerformed
-            // TODO add your handling code here
-           try {
-    DateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
-    dt.setLenient(false); // Đảm bảo rằng định dạng ngày tháng phải chính xác
-java.util.Date ngayMuon = dt.parse(this.txtNgayMuon.getText());
-    java.util.Date hanTra = dt.parse(this.txtHanTra.getText());
-    PhieuMuon pm = new PhieuMuon(
-        this.txtMaPhieuMuon.getText(),
-        this.txtNguoiMuon.getText(),
-        this.txtSachMuon.getText(),
-       ngayMuon,
-       hanTra
-    );
+        try{
+            if(txtMaPhieuMuon.getText().length() == 0){
+                JOptionPane.showMessageDialog(null, "Mã phiếu không thể bỏ trống", "Thông báo", 2);
+            }else if(txtMaPhieuMuon.getText().length() > 10){
+                JOptionPane.showMessageDialog(null, "Mã phiếu không thể dài hơn 10 ký tự", "Thông báo", 2);
+            }else{
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                java.util.Date ngayMuon = dateFormat.parse(txtNgayMuon.getText());
+                java.util.Date hanTra = dateFormat.parse(txtHanTra.getText());
+            
+                PhieuMuon pm = new PhieuMuon(
+                    txtMaPhieuMuon.getText(),
+                    txtNguoiMuon.getText(),
+                    txtSachMuon.getText(),
+                    ngayMuon, hanTra
+                );
+            
+                boolean x = PhieuMuonData.addPhieu(filemuon, pm);
+                if(x){
+                  JOptionPane.showMessageDialog(null, "Thêm thành công", "Thông báo", 2);  
+                }
+                else{
+                  JOptionPane.showMessageDialog(null, "Mã phiếu đã tồn tại hoặc lỗi bất định", "Thông báo", 2);
+                  return ;
+                }
+                DefaultTableModel model = (DefaultTableModel) tbMuon.getModel();
+                model.addRow(new Object[]{
+                    pm.getMaMuon(),
+                    pm.getMaKhach(),
+                    pm.getMaSach(),
+                    dateFormat.format(pm.getNgayMuon()),
+                    dateFormat.format(pm.getHanTra())
+                });
 
-    PhieuMuonData.InsertPhieu(filemuon, pm);
-} catch (ParseException e) {
-    e.printStackTrace();
-}
-    }//GEN-LAST:event_btAddPhieuActionPerformed
-
-    private void btEditPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditPhieuActionPerformed
-        // TODO add your handling code here:
-        if (this.txtMaPhieuMuon.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã phiếu mượn không thể bỏ trống", "thông báo", 2);
-        else if(this.txtMaPhieuMuon.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã phiếu mượn không được lớn hơn 10 ký tự", "thông báo", 2);
-        else {
-            PhieuMuon p = new PhieuMuon(this.txtMaPhieuMuon.getText(), this.txtNguoiMuon.getText(),
-                    this.txtSachMuon.getText(),Date.valueOf(this.txtNgayMuon.getText()),Date.valueOf(this.txtHanTra.getText()));
-            if(phieumuondata.UpdatePhieu(p)) {
-                JOptionPane.showMessageDialog(null, "Bạn đã sửa thành công", "Thông báo", 1);
+            // Cập nhật hiển thị của bảng
+                model.fireTableDataChanged();
+                ResetForm();
             }
-            else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
-            this.btLookMuon.doClick();
+            
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btAddPhieuActionPerformed
+    
+    //sửa 1 phiếu mượn
+    private void btEditPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditPhieuActionPerformed
+        
+        int row = tbMuon.getSelectedRow();
+        
+        if (row >= 0) {
+            try {
+                DateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+                dt.setLenient(false); // Đảm bảo rằng định dạng ngày tháng phải chính xác
+                // Lấy thông tin từ các trường văn bản
+                String maPhieuMuon = txtMaPhieuMuon.getText();
+                String nguoiMuon = txtNguoiMuon.getText();
+                String sachMuon = txtSachMuon.getText();
+                java.util.Date ngayMuon = dt.parse(txtNgayMuon.getText());
+                java.util.Date hanTra = dt.parse(txtHanTra.getText());
+                
+                // Cập nhật thông tin trong bảng
+                tbMuon.setValueAt(nguoiMuon, row, 1);
+                tbMuon.setValueAt(sachMuon, row, 2);
+                tbMuon.setValueAt(dt.format(ngayMuon), row, 3);
+                tbMuon.setValueAt(dt.format(hanTra), row, 4);
+                
+                // Cập nhật thông tin trong file
+                
+                
+                PhieuMuon pm = new PhieuMuon(
+                        maPhieuMuon,
+                        nguoiMuon,
+                        sachMuon,
+                        ngayMuon,
+                        hanTra
+                );
+                boolean x = PhieuMuonData.updatePhieu(filemuon, pm);
+                if(x){
+                  JOptionPane.showMessageDialog(null, "Cập nhật thành công", "Thông báo", 2);  
+                }
+                else{
+                  JOptionPane.showMessageDialog(null, "Mã phiếu không tồn tại hoặc không thể sửa mã phiếu", "Thông báo", 2);
+                }
+                ResetForm();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
         }
     }//GEN-LAST:event_btEditPhieuActionPerformed
-
+    
+    //xóa 1 phiếu mượn
     private void btDelPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDelPhieuActionPerformed
-        // TODO add your handling code here:
-        if (this.txtMaPhieuMuon.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã phiếu không thể bỏ trống", "thông báo", 2);
-        else if(this.txtMaPhieuMuon.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã phiếu không được lớn hơn 10 ký tự", "thông báo", 2);
-        else {
-            if(phieumuondata.DeletePhieu(this.txtMaPhieuMuon.getText())) {
-                JOptionPane.showMessageDialog(null, "Bạn đã xóa thành công", "Thông báo", 1);
-            }
-            else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
-            this.btLookMuon.doClick();
-        }
+           int row = tbMuon.getSelectedRow();
+            
+          if(txtMaPhieuMuon.getText().length() != 0){
+              boolean x = PhieuMuonData.delPhieu(filemuon, txtMaPhieuMuon.getText());
+              if(x){
+                  JOptionPane.showMessageDialog(null, "Xóa thành công", "Thông báo", 2);
+                    tbMuon.setValueAt(null, row, 0);
+                    tbMuon.setValueAt(null, row, 1);
+                    tbMuon.setValueAt(null, row, 2);
+                    tbMuon.setValueAt(null, row, 3);
+                    tbMuon.setValueAt(null, row, 4);
+                    ResetForm();
+              }
+              else{
+                  JOptionPane.showMessageDialog(null, "Mã phiếu không tồn tại hoặc lỗi bất định", "Thông báo", 2);
+              }
+          }
+          else {
+               JOptionPane.showMessageDialog(null,"Không tìm thấy mã phiếu mượn", "Thông báo", 2);
+          }
     }//GEN-LAST:event_btDelPhieuActionPerformed
 
+    
     private void btNewPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNewPhieuActionPerformed
         // TODO add your handling code here:
         this.txtMaPhieuMuon.setText(null);
@@ -1095,9 +1179,9 @@ java.util.Date ngayMuon = dt.parse(this.txtNgayMuon.getText());
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMaSachActionPerformed
 
-    private void txtLookPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLookPhieuActionPerformed
+    private void txtSearchTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchTextActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtLookPhieuActionPerformed
+    }//GEN-LAST:event_txtSearchTextActionPerformed
 
     private void txtLookSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLookSachActionPerformed
         // TODO add your handling code here:
@@ -1197,7 +1281,6 @@ java.util.Date ngayMuon = dt.parse(this.txtNgayMuon.getText());
     private javax.swing.JTextField txtGia;
     private javax.swing.JTextField txtHanTra;
     private javax.swing.JTextField txtLookKhach;
-    private javax.swing.JTextField txtLookPhieu;
     private javax.swing.JTextField txtLookSach;
     private javax.swing.JTextField txtMaKhach;
     private javax.swing.JTextField txtMaPhieuMuon;
@@ -1209,6 +1292,7 @@ java.util.Date ngayMuon = dt.parse(this.txtNgayMuon.getText());
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtPhone;
     private javax.swing.JTextField txtSachMuon;
+    private javax.swing.JTextField txtSearchText;
     private javax.swing.JTextField txtSoLuong;
     private javax.swing.JTextField txtTenKhach;
     private javax.swing.JTextField txtTenSach;
@@ -1216,6 +1300,10 @@ java.util.Date ngayMuon = dt.parse(this.txtNgayMuon.getText());
     // End of variables declaration//GEN-END:variables
 
     private boolean isStringEmpty(String namelookphieu) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private Date dateFormat(String text) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

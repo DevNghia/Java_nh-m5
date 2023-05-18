@@ -381,7 +381,7 @@
                                           <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
                                           <Component id="btLookMuon" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="txtLookPhieu" pref="382" max="32767" attributes="0"/>
+                                          <Component id="txtSearchText" pref="382" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -401,7 +401,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtLookPhieu" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtSearchText" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btLookMuon" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btNewPhieu" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -494,9 +494,9 @@
                     <Property name="text" type="java.lang.String" value="Ng&#xe0;y m&#x1b0;&#x1ee3;n"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtLookPhieu">
+                <Component class="javax.swing.JTextField" name="txtSearchText">
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtLookPhieuActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtSearchTextActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel23">

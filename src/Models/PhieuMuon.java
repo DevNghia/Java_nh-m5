@@ -5,6 +5,8 @@
  */
 package Models;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -44,7 +46,7 @@ public class PhieuMuon {
         this.maKhach = mm;
     }
     
-    public String getSach() {
+    public String getMaSach() {
         return maSach;
     }
     public void setMaSach(String mm) {
@@ -62,6 +64,14 @@ public class PhieuMuon {
     }
     public void setHanTra(Date ht) {
         this.hanTra = ht;
+    }
+
+    @Override
+    public String toString() {
+        DateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+        dt.setLenient(false); // Đảm bảo rằng định dạng ngày tháng phải chính xác
+        
+        return maMuon + "," + maKhach + "," + maSach + "," + dt.format(ngayMuon) + "," + dt.format(hanTra);
     }
     
     
