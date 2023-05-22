@@ -7,9 +7,13 @@ package Controllers;
 
 import Models.KhachHang;
 import java.awt.HeadlessException;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,16 +21,18 @@ import javax.swing.JOptionPane;
  * @author Gaara
  */
 public class KhachHangData {
-    public static PreparedStatement ps;
-    public static ResultSet rs;
     
+    public static String filepath = "D:\\taikhoan.txt";
     public KhachHang dangNhap(String taiKhoan, String pass) {
         KhachHang kh = null;
+        List<KhachHang> dstk = new ArrayList<>();
         try{
 //            ps = Connect.getConnect().prepareStatement("SELECT * FROM KHACH_HANG where Ma_Khach_hang = ? and Password=?");
-            ps.setString(1, taiKhoan);
-            ps.setString(2, pass);
-            rs = ps.executeQuery();
+            BufferedReader reader = new BufferedReader(new FileReader(filepath)); 
+            String line;
+            while((line = reader.readLine()) != null){
+                String[] fileds = line.split(",");
+            }
             while(rs.next()) {
                 kh = new KhachHang();
                // kh.setMaKH(rs.getString("Ma_Khach_hang"));
