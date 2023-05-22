@@ -534,15 +534,15 @@ public class JAdminSearch extends javax.swing.JFrame {
             int row = this.tbSach.getSelectedRow();
             String IDrow = (this.tbSach.getModel().getValueAt(row, 0)).toString();
             String sql1 = "SELECT * FROM SACH where Ma_Sach='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaSach.setText(rs.getString("Ma_Sach"));
-                this.txtTenSach.setText(rs.getString("Ten_Sach"));
-                this.txtNhaXb.setText(rs.getString("Nha_Xb"));
-                this.txtTenTacGia.setText(rs.getString("Ten_Tac_gia"));
-                this.txtGia.setText((rs.getString("Gia_tien")));
-                this.txtSoLuong.setText(rs.getString("So_luong"));
-            }
+            //ResultSet rs = UpdateTable.ShowTextField(sql1);
+//            if(rs.next()) {
+//                this.txtMaSach.setText(rs.getString("Ma_Sach"));
+//                this.txtTenSach.setText(rs.getString("Ten_Sach"));
+//                this.txtNhaXb.setText(rs.getString("Nha_Xb"));
+//                this.txtTenTacGia.setText(rs.getString("Ten_Tac_gia"));
+//                this.txtGia.setText((rs.getString("Gia_tien")));
+//                this.txtSoLuong.setText(rs.getString("So_luong"));
+//            }
         }catch(Exception e) {
             
         }
@@ -580,16 +580,16 @@ public class JAdminSearch extends javax.swing.JFrame {
             int row = this.tbKhach.getSelectedRow();
             String IDrow = (this.tbKhach.getModel().getValueAt(row, 0)).toString();
             String sql1 = "SELECT * FROM KHACH_HANG where Ma_Khach_hang='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaKhach.setText(rs.getString("Ma_Khach_hang"));
-                this.txtPassword.setText(rs.getString("Password"));
-                this.txtTenKhach.setText(rs.getString("Ten_Khach_hang"));
-                this.txtNgaySinh.setText(rs.getString("Ngay_sinh"));
-                this.txtDiaChi.setText(rs.getString("Dia_Chi"));
-                this.txtPhone.setText(rs.getString("Phone"));
-                
-            }
+//            ResultSet rs = UpdateTable.ShowTextField(sql1);
+//            if(rs.next()) {
+//                this.txtMaKhach.setText(rs.getString("Ma_Khach_hang"));
+//                this.txtPassword.setText(rs.getString("Password"));
+//                this.txtTenKhach.setText(rs.getString("Ten_Khach_hang"));
+//                this.txtNgaySinh.setText(rs.getString("Ngay_sinh"));
+//                this.txtDiaChi.setText(rs.getString("Dia_Chi"));
+//                this.txtPhone.setText(rs.getString("Phone"));
+//                
+//            }
         }catch(Exception e) {
             
         }
@@ -624,15 +624,15 @@ public class JAdminSearch extends javax.swing.JFrame {
             int row = this.tbMuon.getSelectedRow();
             String IDrow = (this.tbMuon.getModel().getValueAt(row, 0)).toString();
             String sql1 = "SELECT * FROM PHIEU_MUON where Ma_Phieu_muon='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaPhieuMuon.setText(rs.getString("Ma_Phieu_muon"));
-                this.txtNguoiMuon.setText(rs.getString("Ma_Khach_hang"));
-                this.txtSachMuon.setText(rs.getString("Ma_Sach"));
-                this.txtNgayMuon.setText(rs.getString("Ngay_muon"));
-                this.txtHanTra.setText(rs.getString("Han_tra"));
-                this.jTextField1.setText(rs.getString("NgayTra"));
-            }
+//            ResultSet rs = UpdateTable.ShowTextField(sql1);
+//            if(rs.next()) {
+//                this.txtMaPhieuMuon.setText(rs.getString("Ma_Phieu_muon"));
+//                this.txtNguoiMuon.setText(rs.getString("Ma_Khach_hang"));
+//                this.txtSachMuon.setText(rs.getString("Ma_Sach"));
+//                this.txtNgayMuon.setText(rs.getString("Ngay_muon"));
+//                this.txtHanTra.setText(rs.getString("Han_tra"));
+//                this.jTextField1.setText(rs.getString("NgayTra"));
+//            }
         }catch(Exception e) {
             
         }

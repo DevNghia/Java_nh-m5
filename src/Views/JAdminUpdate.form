@@ -620,8 +620,8 @@
                                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                                       <Component id="txtMaKhach" alignment="0" pref="289" max="32767" attributes="0"/>
-                                                      <Component id="txtPassword" alignment="0" max="32767" attributes="0"/>
                                                       <Component id="txtTenKhach" alignment="0" max="32767" attributes="0"/>
+                                                      <Component id="txtPassWord" alignment="0" max="32767" attributes="0"/>
                                                   </Group>
                                                   <EmptySpace max="32767" attributes="0"/>
                                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -685,14 +685,14 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtPassword" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtTenKhach" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txtDiaChi" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtTenKhach" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPassWord" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txtPhone" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -704,9 +704,9 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JTextField" name="txtPassword">
-                </Component>
                 <Component class="javax.swing.JTextField" name="txtTenKhach">
+                </Component>
+                <Component class="javax.swing.JTextField" name="txtPassWord">
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtNgaySinh">
                 </Component>

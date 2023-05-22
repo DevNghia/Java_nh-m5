@@ -5,7 +5,6 @@
  */
 package Views;
 
-import static Views.UpdateTable.ps;
 import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -17,7 +16,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -46,17 +44,17 @@ public class ThongKe extends javax.swing.JFrame {
             String sql3 = "SELECT COUNT(Ma_Phieu_muon) as phieumuon FROM PHIEU_MUON";
             String sql4 = "SELECT COUNT(DISTINCT Ma_Khach_hang) as khachmuon FROM PHIEU_MUON";
             String sql5 = "SELECT COUNT(Ma_Phieu_muon) as phieumuon FROM PHIEU_MUON where (Han_tra < (select GETDATE()) and NgayTra IS NULL)";
-            ResultSet rs1 = UpdateTable.ShowTextField(sql1);
-            ResultSet rs2 = UpdateTable.ShowTextField(sql2);
-            ResultSet rs3 = UpdateTable.ShowTextField(sql3);
-            ResultSet rs4 = UpdateTable.ShowTextField(sql4);
-            ResultSet rs5 = UpdateTable.ShowTextField(sql5);
-            if(rs1.next()) this.lbTongSach.setText("Tổng số sách : "+Integer.toString(rs1.getInt("sach")));
-            if(rs2.next()) this.lbTongKhach.setText("Tổng số khách hàng: " + Integer.toString(rs2.getInt("khachhang")));
-            if(rs3.next()) this.lbTongPhieu.setText(" Tổng số phiếu mượn: "+Integer.toString(rs3.getInt("phieumuon")));
-            if(rs4.next()) this.lbTongKhachMuon.setText("Tổng số khách đang mượn sách: "+Integer.toString(rs4.getInt("khachmuon")));
-            if(rs5.next()) this.lbTongPhieuQuaHan.setText("Tổng số phiếu quá hạn là: "+Integer.toString(rs5.getInt("phieumuon")));
-            
+//            ResultSet rs1 = UpdateTable.ShowTextField(sql1);
+//            ResultSet rs2 = UpdateTable.ShowTextField(sql2);
+//            ResultSet rs3 = UpdateTable.ShowTextField(sql3);
+//            ResultSet rs4 = UpdateTable.ShowTextField(sql4);
+//            ResultSet rs5 = UpdateTable.ShowTextField(sql5);
+//            if(rs1.next()) this.lbTongSach.setText("Tổng số sách : "+Integer.toString(rs1.getInt("sach")));
+//            if(rs2.next()) this.lbTongKhach.setText("Tổng số khách hàng: " + Integer.toString(rs2.getInt("khachhang")));
+//            if(rs3.next()) this.lbTongPhieu.setText(" Tổng số phiếu mượn: "+Integer.toString(rs3.getInt("phieumuon")));
+//            if(rs4.next()) this.lbTongKhachMuon.setText("Tổng số khách đang mượn sách: "+Integer.toString(rs4.getInt("khachmuon")));
+//            if(rs5.next()) this.lbTongPhieuQuaHan.setText("Tổng số phiếu quá hạn là: "+Integer.toString(rs5.getInt("phieumuon")));
+//            
         }catch(Exception e) {
             
         }

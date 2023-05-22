@@ -177,15 +177,15 @@ public class JKhachHang extends javax.swing.JFrame {
             int row = this.jTable1.getSelectedRow();
             String IDrow = (this.jTable1.getModel().getValueAt(row, 0)).toString();
             String sql1 = "SELECT * FROM SACH where Ma_Sach='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaSach.setText(rs.getString("Ma_Sach"));
-                this.txtTenSach.setText(rs.getString("Ten_Sach"));
-                this.txtNhaXb.setText(rs.getString("Nha_Xb"));
-                this.txtTenTacGia.setText(rs.getString("Ten_Tac_gia"));
-                this.txtGia.setText((rs.getString("Gia_tien")));
-                this.txtSoLuong.setText(rs.getString("So_luong"));
-            }
+//            ResultSet rs = UpdateTable.ShowTextField(sql1);
+//            if(rs.next()) {
+//                this.txtMaSach.setText(rs.getString("Ma_Sach"));
+//                this.txtTenSach.setText(rs.getString("Ten_Sach"));
+//                this.txtNhaXb.setText(rs.getString("Nha_Xb"));
+//                this.txtTenTacGia.setText(rs.getString("Ten_Tac_gia"));
+//                this.txtGia.setText((rs.getString("Gia_tien")));
+//                this.txtSoLuong.setText(rs.getString("So_luong"));
+//            }
         }catch(Exception e) {
             
         }

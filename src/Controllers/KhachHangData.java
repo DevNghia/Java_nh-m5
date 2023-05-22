@@ -6,15 +6,23 @@
 package Controllers;
 
 import Models.KhachHang;
+import Models.PhieuMuon;
+import Models.Sach;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -22,84 +30,193 @@ import javax.swing.JOptionPane;
  */
 public class KhachHangData {
     
-    public static String filepath = "D:\\taikhoan.txt";
+    
     public KhachHang dangNhap(String taiKhoan, String pass) {
         KhachHang kh = null;
-        List<KhachHang> dstk = new ArrayList<>();
-        try{
-//            ps = Connect.getConnect().prepareStatement("SELECT * FROM KHACH_HANG where Ma_Khach_hang = ? and Password=?");
-            BufferedReader reader = new BufferedReader(new FileReader(filepath)); 
-            String line;
-            while((line = reader.readLine()) != null){
-                String[] fileds = line.split(",");
-            }
-            while(rs.next()) {
-                kh = new KhachHang();
-               // kh.setMaKH(rs.getString("Ma_Khach_hang"));
-               // kh.setPass(rs.getString("Password"));
-                kh.setBirth(rs.getDate("Ngay_sinh"));
-                kh.setName(rs.getString("Ten_Khach_hang"));
-                kh.setDiaChi(rs.getString("Dia_chi"));
-                kh.setPhone(rs.getString("Phone"));
-            }
-        }
-        catch(Exception e) {
-            return kh = null;
-        }
         return kh;
     }
-    
-    
-    public static ResultSet showTextfield(String sql) {
-        try {
-//            ps = Connect.getConnect().prepareStatement(sql);
-            return ps.executeQuery();
-        } catch (Exception e) {
-            return null;
+    public static boolean addKhachHang(String filepath, KhachHang kh) throws ParseException{
+        List<KhachHang> khList = new ArrayList<>();
+        boolean isExits =false;
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(filepath));
+            String line;
+            while((line = reader.readLine()) != null){
+                String[] fields = line.split(",");
+                String maKhach = fields[0];
+                String tenKhach = fields[1];
+                String passWord = fields[2];
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date ngaysinh = dateFormat.parse(fields[3]);
+                String diachi = fields[4];
+                String Phone = fields[5];
+                
+                KhachHang pm = new KhachHang(maKhach, tenKhach, passWord, ngaysinh, diachi, Phone);
+                khList.add(pm);
+            }
+            
+            for(KhachHang k: khList){
+                if(k.getMaKH().toLowerCase().equals(kh.getMaKH().toLowerCase())){
+                    isExits = true;
+                    break;
+                }
+            }
+            
+            if(isExits){
+//                JOptionPane.showMessageDialog(null, "Mã phiếu mượn đã tồn tại", "Thông báo", 2);
+                return false;
+            }
+            else {
+                khList.add(kh);
+                FileWriter writer = new FileWriter(filepath);
+                for(KhachHang pm: khList){
+                    writer.write(pm.toString() + "\n");
+                }
+                writer.close();
+            }
+        }catch(IOException e){
+            e.printStackTrace();
         }
+        return true;
+    }
+   
+    public static DefaultTableModel search(String filepath, String p) {
+    String[] columnNames = {"Mã khách hàng", "Tên khách hàng", "Mật khẩu", "Ngày sinh", "Địa chỉ", "Điện thoại"};
+    DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+    try {
+        BufferedReader reader = new BufferedReader(new FileReader(filepath));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] fields = line.split(",");
+            String maKhach = fields[0];
+            String tenKhach = fields[1];
+            String passWord = fields[2];
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date ngaySinh = dateFormat.parse(fields[3]);
+            String diaChi = fields[4];
+            String phone = fields[5];
+
+            KhachHang kh = new KhachHang(maKhach, tenKhach, passWord, ngaySinh, diaChi, phone);
+
+            if (kh.getMaKH().toLowerCase().contains(p.toLowerCase())
+                    || kh.getName().toLowerCase().contains(p.toLowerCase())
+                    || kh.getDiaChi().toLowerCase().contains(p.toLowerCase())) {
+                Object[] rowData = {kh.getMaKH(), kh.getName(), kh.getPass(), dateFormat.format(ngaySinh), kh.getDiaChi(), kh.getPhone()};
+                model.addRow(rowData);
+            }
+        }
+        reader.close();
+
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Không tìm thấy phiếu mượn", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    } catch (ParseException e) {
+        e.printStackTrace();
+    }
+    return model;
+}
+    
+    public static boolean updatePhieu(String filepath, KhachHang p){
+        List<KhachHang> khList = new ArrayList<>();
+        
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(filepath));
+            String line;
+            while((line = reader.readLine()) != null){
+                String[] fields = line.split(",");
+                String maKH = fields[0];
+                String tenKH = fields[1];
+                String passWord = fields[2];
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date ngaySinh = dateFormat.parse(fields[3]);
+                String diaChi = fields[4];
+                String phone = fields[5];
+                
+                KhachHang kh = new KhachHang(maKH, tenKH, passWord, ngaySinh, diaChi, phone);
+                khList.add(kh);
+            }
+            reader.close();
+            for(KhachHang pm: khList){
+                if(pm.getMaKH().toLowerCase().equals(p.getMaKH().toLowerCase())){
+                    pm.setName(p.getName());
+                    pm.setPass(p.getPass());
+                    pm.setBirth(p.getBirth());
+                    pm.setDiaChi(p.getDiaChi());
+                    pm.setPhone(p.getPhone());
+                    break;
+                }       
+            }
+            
+            FileWriter fr = new FileWriter(filepath);
+            for(KhachHang pm : khList){
+                fr.write(pm.toString() + "\n");
+            }
+            fr.close();
+            return true;
+        }catch(IOException e){
+            e.printStackTrace();
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
-     public static void InsertKhachHang(KhachHang kh) {
-        String sql = "insert into KHACH_HANG values(?,?,?,?,?,?)";
-        try {
-//            ps = Connect.getConnect().prepareStatement(sql);
-            ps.setString(1, kh.getMaKH());
-            ps.setString(2, kh.getPass());
-            ps.setString(3, kh.getName());
-            ps.setDate(4, kh.getBirth());
-            ps.setString(5, kh.getDiaChi());
-            ps.setString(6, kh.getPhone());
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Đã thêm khách hàng thành công!" , "Thông báo", 1);
-        } catch(HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "Khách hàng không được thêm" , "Thông báo", 1);
+    public static boolean DeleteKhach(String filePath, String maKH) {
+    try {
+        // Đọc dữ liệu từ file txt và lưu vào một danh sách các đối tượng Sach
+        List<KhachHang> khList = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String line;
+        try{
+            while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length == 6) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date ngaysinh = dateFormat.parse(parts[3]);
+                
+                KhachHang kh = new KhachHang(parts[0], parts[1], parts[2], ngaysinh ,parts[4], parts[5]);
+                khList.add(kh);
+            } else {
+                System.out.println("Invalid data: " + line);
+            }
         }
-    }
-    
-    public boolean UpdateKhachHang(KhachHang kh) {
-        try {
-//            ps = Connect.getConnect().prepareStatement("UPDATE KHACH_HANG SET Password = ?, Ten_Khach_hang = ?,"
-//                    + "Ngay_sinh = ?, Dia_chi = ?, Phone = ? where Ma_Khach_hang = ?");
-            ps.setString(6, kh.getMaKH());
-            ps.setString(1, kh.getPass());
-            ps.setString(2, kh.getName());
-            ps.setDate(3, kh.getBirth());
-            ps.setString(4, kh.getDiaChi());
-            ps.setString(5, kh.getPhone());
-            return ps.executeUpdate() >0;
-        } catch (Exception e) {
+        reader.close();
+        }catch(ParseException ex){
+            
+        }
+        
+
+        // Tìm và xóa đối tượng Sach có mã sách trùng với maSach
+        KhachHang khRemove = null;
+        for (KhachHang kh : khList) {
+            if (kh.getMaKH().equals(maKH)) {
+                khRemove = kh;
+                break;
+            }
+        }
+
+        if (khRemove != null) {
+            khList.remove(khRemove);
+        } else {
+            System.out.println("Khong tim thay sach co ma: " + maKH);
             return false;
         }
-    }
-    
-    public boolean DeleteKhachHang(String maKH) {
-        try {
-//            ps = Connect.getConnect().prepareStatement("DELETE FROM KHACH_HANG WHERE Ma_Khach_hang = ?");
-            ps.setString(1, maKH);
-            return ps.executeUpdate() >0;
-        } catch(Exception e) {
-            return false;
+
+        // Ghi lại danh sách các đối tượng Sach vào file txt
+        FileWriter writer = new FileWriter(filePath);
+        for (KhachHang kh : khList) {
+            writer.write(kh.toString() + "\n");
         }
+        writer.close();
+
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
-    
+}
 }

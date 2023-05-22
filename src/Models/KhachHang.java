@@ -5,8 +5,9 @@
  */
 package Models;
 
-import java.sql.Date;
-
+//import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 /**
  *
  * @author Gaara
@@ -16,7 +17,7 @@ public class KhachHang {
     private String maKhachHang;
     private String password;
     private String name;
-    private Date birth;
+    private java.util.Date birth;
     private String diaChi;
     private String phone;
     
@@ -24,7 +25,7 @@ public class KhachHang {
         
     }
     
-    public KhachHang(String maKH, String password, String name, Date birth, String diaChi, String phone) {
+    public KhachHang(String maKH, String name, String password, Date birth, String diaChi, String phone) {
         this.maKhachHang = maKH;
         this.password = password;
         this.name = name;
@@ -32,6 +33,7 @@ public class KhachHang {
         this.diaChi = diaChi;
         this.phone = phone;
     }
+
     public String getMaKH() {
         return maKhachHang;
     }
@@ -73,4 +75,11 @@ public class KhachHang {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return maKhachHang + "," + name + "," + password + "," + dateFormat.format(birth) + "," + diaChi + "," + phone;
+    }
+    
 }

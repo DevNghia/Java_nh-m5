@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/hungl/OneDrive/Documents/library%20java/Java_nh-m5/src/Models/PhieuMuon.java</file>
             <file>file:/C:/Users/hungl/OneDrive/Documents/library%20java/Java_nh-m5/src/Views/JAdminUpdate.java</file>
-            <file>file:/C:/Users/hungl/OneDrive/Documents/library%20java/Java_nh-m5/src/Controllers/PhieuMuonData.java</file>
-            <file>file:/C:/Users/hungl/OneDrive/Documents/library%20java/Java_nh-m5/src/Models/KhachHang.java</file>
-            <file>file:/C:/Users/hungl/OneDrive/Documents/library%20java/Java_nh-m5/src/Controllers/KhachHangData.java</file>
+            <file>file:/C:/Users/hungl/OneDrive/Documents/library%20java/Java_nh-m5/src/Views/JKhachHang.java</file>
+            <file>file:/C:/Users/hungl/OneDrive/Documents/library%20java/Java_nh-m5/src/Views/JAdminSearch.java</file>
+            <file>file:/C:/Users/hungl/OneDrive/Documents/library%20java/Java_nh-m5/src/Views/ThongKe.java</file>
         </group>
     </open-files>
 </project-private>

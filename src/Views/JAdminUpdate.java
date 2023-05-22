@@ -41,9 +41,6 @@ public class JAdminUpdate extends javax.swing.JFrame {
     PhieuMuonData phieumuondata = new PhieuMuonData();
     public static PreparedStatement ps = null;
     public static PreparedStatement ps2 = null;
-//    public static String sqlSach = "SELECT * FROM SACH order by Ma_Sach asc";
-//    public static String sqlKhach = "SELECT * FROM KHACH_HANG order by Ma_Khach_hang asc";
-//    public static String sqlPhieu = "SELECT * FROM PHIEU_MUON order by Ma_Phieu_muon asc";
     public static String filesach = "D:\\sach.txt";
     public static String filemuon = "D:\\muon.txt";
     public static String filekhach = "D:\\khach.txt";
@@ -66,10 +63,12 @@ public class JAdminUpdate extends javax.swing.JFrame {
         initComponents();
         btEditPhieu.setEnabled(false);
         btDelPhieu.setEnabled(false);
+        btEditKhach.setEnabled(false);
+        btDelKhach.setEnabled(false);
         
         UpdateTable.LoadData(filesach, tbSach);
         UpdateTable.LoadData2(filemuon, tbMuon);
-        UpdateTable.LoadData3(filesach, tbKhach);
+        UpdateTable.LoadData3(filekhach, tbKhach);
         ProcessCrt(false);
         ProcessCrt2(false);
         ProcessCrt3(false);
@@ -150,8 +149,8 @@ public class JAdminUpdate extends javax.swing.JFrame {
         btTra = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        txtPassword = new javax.swing.JTextField();
         txtTenKhach = new javax.swing.JTextField();
+        txtPassWord = new javax.swing.JTextField();
         txtNgaySinh = new javax.swing.JTextField();
         txtDiaChi = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -609,8 +608,8 @@ public class JAdminUpdate extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(txtMaKhach, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
-                                            .addComponent(txtPassword)
-                                            .addComponent(txtTenKhach))
+                                            .addComponent(txtTenKhach)
+                                            .addComponent(txtPassWord))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
@@ -657,13 +656,13 @@ public class JAdminUpdate extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTenKhach, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(txtTenKhach, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPassWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addGap(18, 18, 18)
@@ -837,87 +836,163 @@ public class JAdminUpdate extends javax.swing.JFrame {
             this.btLookSach.doClick();
         }
     }//GEN-LAST:event_btDelSachActionPerformed
-
+    // Khach hang Le Van Hung
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private void tbKhachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbKhachMouseClicked
         // TODO add your handling code here:
-        ProcessCrt2(true);
-        this.btAddKhach.setEnabled(false);
-        try{
-            int row = this.tbKhach.getSelectedRow();
-            String IDrow = (this.tbKhach.getModel().getValueAt(row, 0)).toString();
-            String sql1 = "SELECT * FROM KHACH_HANG where Ma_Khach_hang='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaKhach.setText(rs.getString("Ma_Khach_hang"));
-                this.txtPassword.setText(rs.getString("Password"));
-                this.txtTenKhach.setText(rs.getString("Ten_Khach_hang"));
-                this.txtNgaySinh.setText(rs.getString("Ngay_sinh"));
-                this.txtDiaChi.setText(rs.getString("Dia_Chi"));
-                this.txtPhone.setText(rs.getString("Phone"));
-                
-            }
-        }catch(Exception e) {
+        int row = tbKhach.getSelectedRow();
+        if(row >= 0){
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String maKhachHang = tbKhach.getValueAt(row, 0).toString();
+            String tenKhachHang = tbKhach.getValueAt(row, 1).toString();
+            String passWord = tbKhach.getValueAt(row, 2).toString();
+            String ngaySinh = tbKhach.getValueAt(row, 3).toString();
+            String diaChi = tbKhach.getValueAt(row, 4).toString();
+            String phone = tbKhach.getValueAt(row, 5).toString();
             
+            
+            txtMaKhach.setText(maKhachHang);
+            txtTenKhach.setText(tenKhachHang);
+            txtPassWord.setText(passWord);
+            txtDiaChi.setText(diaChi);
+            txtNgaySinh.setText(ngaySinh);
+            txtPhone.setText(phone);
         }
+        btEditKhach.setEnabled(true);
+        btDelKhach.setEnabled(true);
     }//GEN-LAST:event_tbKhachMouseClicked
-
+    //tim kiem tai khoan
     private void btLookKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookKhachActionPerformed
-        // TODO add your handling code here:
-        if(this.txtLookKhach.getText().length() == 0) {
-            String sql1 = "SELECT * from KHACH_HANG ";
-            UpdateTable.LoadData(sql1, tbKhach);
+        try {
+        String searchText = this.txtLookKhach.getText();
+        if(searchText.length() == 0){
+            UpdateTable.LoadData3(filekhach, tbKhach);
+        }else{
+            List<String[]> khList = UpdateTable.getDataFromTextFile(filekhach);
+            List<String[]> searchData = SachData.searchSach(khList, searchText);
+            UpdateTable.LoadData3(searchData, tbKhach);
         }
-        else {
-            String sql1 = "SELECT * from KHACH_HANG WHERE Ma_Khach_hang like N'%"+this.txtLookKhach.getText()+"%' "
-                    + "or Ten_Khach_hang like N'%"+this.txtLookKhach.getText()+"%' or Phone like '%"+this.txtLookKhach.getText()+"%'"
-                    +"or Mail like N'%"+this.txtLookKhach.getText()+"%'";
-            UpdateTable.LoadData(sql1, tbKhach);
-        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     }//GEN-LAST:event_btLookKhachActionPerformed
-
+    // them khach hang moi - da xong
     private void btAddKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddKhachActionPerformed
-        // TODO add your handling code here:
         try{
-             if (this.txtMaKhach.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã khách hàng không thể bỏ trống", "thông báo", 2);
-            else if(this.txtMaKhach.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã khách hàng không được lớn hơn 10 ký tự", "thông báo", 2);
-            else {
-            KhachHang s = new KhachHang(this.txtMaKhach.getText(), this.txtPassword.getText(), this.txtTenKhach.getText(),Date.valueOf(this.txtNgaySinh.getText()),
-            this.txtDiaChi.getText(),this.txtPhone.getText());
-            KhachHangData.InsertKhachHang(s);
-            this.btLookKhach.doClick();
-        }
-        }catch(Exception e) {
-            JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
-        }
-        
-    }//GEN-LAST:event_btAddKhachActionPerformed
+            if(txtMaKhach.getText().length() == 0){
+                JOptionPane.showMessageDialog(null, "Mã khách hàng không thể bỏ trống", "Thông báo", 2);
+                return ;
+            }else if(txtMaKhach.getText().length() > 10){
+                JOptionPane.showMessageDialog(null, "Mã khách hàng không thể dài hơn 10 ký tự", "Thông báo", 2);
+                return;
+            }else{
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                java.util.Date ngaySinh = dateFormat.parse(txtNgaySinh.getText());
+                
+            
+                KhachHang kh = new KhachHang(
+                        txtMaKhach.getText(),
+                        txtTenKhach.getText(),
+                        txtPassWord.getText(),
+                        ngaySinh,
+                        txtDiaChi.getText(),
+                        txtPhone.getText()
+                );
+            
+                boolean x = KhachHangData.addKhachHang(filekhach, kh);
+                if(x){
+                  JOptionPane.showMessageDialog(null, "Thêm thành công", "Thông báo", 2);  
+                }
+                else{
+                  JOptionPane.showMessageDialog(null, "Mã phiếu đã tồn tại hoặc lỗi bất định", "Thông báo", 2);
+                  return ;
+                }
+                DefaultTableModel model = (DefaultTableModel) tbKhach.getModel();
+                model.addRow(new Object[]{
+                    kh.getMaKH(),
+                    kh.getName(),
+                    kh.getPass(),
+                    dateFormat.format(kh.getBirth()),
+                    kh.getDiaChi(),
+                    kh.getPhone()
+                });
 
-    private void btEditKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditKhachActionPerformed
-        // TODO add your handling code here:
-        if (this.txtMaKhach.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã khách hàng không thể bỏ trống", "thông báo", 2);
-        else if(this.txtMaKhach.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã khách hàng không được lớn hơn 10 ký tự", "thông báo", 2);
-        else {
-            KhachHang s = new KhachHang(this.txtMaKhach.getText(), this.txtPassword.getText(), this.txtTenKhach.getText(),Date.valueOf(this.txtNgaySinh.getText()),
-            this.txtDiaChi.getText(),this.txtPhone.getText());
-            if(khachhangdata.UpdateKhachHang(s)) {
-                JOptionPane.showMessageDialog(null, "Bạn đã sửa thành công", "Thông báo", 1);
+            // Cập nhật hiển thị của bảng
+                model.fireTableDataChanged();
+                ResetForm();
             }
-            else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
-            this.btLookKhach.doClick();
+            
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btAddKhachActionPerformed
+    //sua khach hang
+    private void btEditKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditKhachActionPerformed
+        int row = tbKhach.getSelectedRow();
+        
+        if (row >= 0) {
+            try {
+                DateFormat dt = new SimpleDateFormat("dd/MM/yyyy");
+                dt.setLenient(false); // Đảm bảo rằng định dạng ngày tháng phải chính xác
+                // Lấy thông tin từ các trường văn bản
+                String maKH = txtMaKhach.getText();
+                String tenKH = txtTenKhach.getText();
+                String passWord = txtPassWord.getText();
+                java.util.Date ngaySinh = dt.parse(txtNgaySinh.getText());
+                String diachi = txtDiaChi.getText();
+                String phone = txtPhone.getText();
+                
+                // Cập nhật thông tin trong bảng
+                tbKhach.setValueAt(tenKH, row, 1);
+                tbKhach.setValueAt(passWord, row, 2);
+                tbKhach.setValueAt(dt.format(ngaySinh), row, 3);
+                tbKhach.setValueAt(diachi, row, 4);
+                tbKhach.setValueAt(phone, row, 5);
+                // Cập nhật thông tin trong file
+                
+                
+                KhachHang kh = new KhachHang(
+                        maKH, tenKH, passWord, ngaySinh, diachi,phone 
+                );
+                boolean x = KhachHangData.updatePhieu(filekhach, kh);
+                if(x){
+                  JOptionPane.showMessageDialog(null, "Cập nhật thành công", "Thông báo", 2);  
+                }
+                else{
+                  JOptionPane.showMessageDialog(null, "Mã khách hàng  không tồn tại hoặc không thể sửa mã phiếu", "Thông báo", 2);
+                }
+                ResetForm();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
         }
     }//GEN-LAST:event_btEditKhachActionPerformed
-
+    //xoa khach hang
     private void btDelKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDelKhachActionPerformed
-        // TODO add your handling code here:
-        if (this.txtMaKhach.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã sách không thể bỏ trống", "thông báo", 2);
-        else if(this.txtMaKhach.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã sách không được lớn hơn 10 ký tự", "thông báo", 2);
-        else {
-            if(khachhangdata.DeleteKhachHang(this.txtMaKhach.getText())) {
-                JOptionPane.showMessageDialog(null, "Bạn đã xóa thành công", "Thông báo", 1);
+            
+            if(KhachHangData.DeleteKhach(filekhach,this.txtMaKhach.getText())) {
+               JOptionPane.showMessageDialog(null, "Bạn đã xóa thành công", "Thông báo", 1);
+               UpdateTable.LoadData3(filekhach, tbKhach);
             }
             else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
-            this.btLookKhach.doClick();
-        }
+            this.btLookSach.doClick();
+        
     }//GEN-LAST:event_btDelKhachActionPerformed
 
     private void btNewKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNewKhachActionPerformed
@@ -925,13 +1000,26 @@ public class JAdminUpdate extends javax.swing.JFrame {
         ProcessCrt2(false);
         this.btAddKhach.setEnabled(true);
         this.txtMaKhach.setText(null);
-        this.txtPassword.setText(null);
         this.txtTenKhach.setText(null);
+        this.txtPassWord.setText(null);
         this.txtDiaChi.setText(null);
         this.txtNgaySinh.setText(null);
         this.txtPhone.setText(null);
     }//GEN-LAST:event_btNewKhachActionPerformed
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //Le Van Hung phieu muon
     private void tbMuonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbMuonMouseClicked
         // TODO add your handling code here:
         int row = tbMuon.getSelectedRow();
@@ -953,43 +1041,27 @@ public class JAdminUpdate extends javax.swing.JFrame {
         btEditPhieu.setEnabled(true);
         btDelPhieu.setEnabled(true);
     }//GEN-LAST:event_tbMuonMouseClicked
-
+    
+    //chon 1 phieu va hien thi len man hinh
+    
     private void tbMuonMouseClicked2(java.awt.event.MouseEvent evt) {                                    
-        // TODO add your handling code here:
-        ProcessCrt3(true);
-        this.btAddPhieu.setEnabled(false);
-        try{
-            int row = this.tbMuon.getSelectedRow();
-            String IDrow = (this.tbMuon.getModel().getValueAt(row, 0)).toString();
-            String sql1 = "SELECT * FROM PHIEU_MUON where Ma_Phieu_muon='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaPhieuMuon.setText(rs.getString("Ma_Phieu_muon"));
-                this.txtNguoiMuon.setText(rs.getString("Ma_Khach_hang"));
-                this.txtSachMuon.setText(rs.getString("Ma_Sach"));
-                this.txtNgayMuon.setText(rs.getString("Ngay_muon"));
-                this.txtHanTra.setText(rs.getString("Han_tra"));
-                
-            }
-        }catch(Exception e) {
-            
-        }
-    }    
-    
-    //Le Van Hung
-    
+  
+    }      
     
     // tìm kiếm phiếu mượn
     private void btLookMuonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookMuonActionPerformed
-          if(txtSearchText.getText().length() == 0){
-            JOptionPane.showMessageDialog(null,"Mã phiếu không thể trống", "Thông báo", 2);
-            return ;
+        try {
+        String searchText = this.txtSearchText.getText();
+        if(searchText.length() == 0){
+            UpdateTable.LoadData2(filemuon, tbMuon);
+        }else{
+            List<String[]> pmList = UpdateTable.getDataFromTextFile(filemuon);
+            List<String[]> searchData = SachData.searchSach(pmList, searchText);
+            UpdateTable.LoadData2(searchData, tbMuon);
         }
-        else{
-            PhieuMuonData.search(filemuon, txtSearchText.getText());
-            DefaultTableModel model = PhieuMuonData.search(filemuon, txtSearchText.getText());
-            tbMuon.setModel(model);
-        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btLookMuonActionPerformed
     //reset text box
     public void ResetForm(){
@@ -1004,6 +1076,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
         try{
             if(txtMaPhieuMuon.getText().length() == 0){
                 JOptionPane.showMessageDialog(null, "Mã phiếu không thể bỏ trống", "Thông báo", 2);
+                return;
             }else if(txtMaPhieuMuon.getText().length() > 10){
                 JOptionPane.showMessageDialog(null, "Mã phiếu không thể dài hơn 10 ký tự", "Thông báo", 2);
             }else{
@@ -1093,26 +1166,12 @@ public class JAdminUpdate extends javax.swing.JFrame {
     
     //xóa 1 phiếu mượn
     private void btDelPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDelPhieuActionPerformed
-           int row = tbMuon.getSelectedRow();
-            
-          if(txtMaPhieuMuon.getText().length() != 0){
-              boolean x = PhieuMuonData.delPhieu(filemuon, txtMaPhieuMuon.getText());
-              if(x){
-                  JOptionPane.showMessageDialog(null, "Xóa thành công", "Thông báo", 2);
-                    tbMuon.setValueAt(null, row, 0);
-                    tbMuon.setValueAt(null, row, 1);
-                    tbMuon.setValueAt(null, row, 2);
-                    tbMuon.setValueAt(null, row, 3);
-                    tbMuon.setValueAt(null, row, 4);
-                    ResetForm();
-              }
-              else{
-                  JOptionPane.showMessageDialog(null, "Mã phiếu không tồn tại hoặc lỗi bất định", "Thông báo", 2);
-              }
-          }
-          else {
-               JOptionPane.showMessageDialog(null,"Không tìm thấy mã phiếu mượn", "Thông báo", 2);
-          }
+           if(PhieuMuonData.DeletePhieu(filemuon,this.txtMaPhieuMuon.getText())) {
+               JOptionPane.showMessageDialog(null, "Bạn đã xóa thành công", "Thông báo", 1);
+               UpdateTable.LoadData2(filemuon, tbMuon);
+            }
+            else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
+            this.btLookMuon.doClick();
     }//GEN-LAST:event_btDelPhieuActionPerformed
 
     
@@ -1152,7 +1211,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
             this.btLookMuon.doClick();
             
 //            ps = Connect.getConnect().prepareStatement(sql);
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
+            //ResultSet rs = UpdateTable.ShowTextField(sql1);
             try{
             ps.setString(2,this.txtSachMuon.getText());     
             }
@@ -1161,8 +1220,8 @@ public class JAdminUpdate extends javax.swing.JFrame {
             }
            
             int count = 0;
-            if(rs.next()) 
-                count = rs.getInt("So_luong");
+            //if(rs.next()) 
+            //    count = rs.getInt("So_luong");
        
             ps.setInt(1, count+1);
            
@@ -1289,7 +1348,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
     private javax.swing.JTextField txtNgaySinh;
     private javax.swing.JTextField txtNguoiMuon;
     private javax.swing.JTextField txtNhaXb;
-    private javax.swing.JTextField txtPassword;
+    private javax.swing.JTextField txtPassWord;
     private javax.swing.JTextField txtPhone;
     private javax.swing.JTextField txtSachMuon;
     private javax.swing.JTextField txtSearchText;
