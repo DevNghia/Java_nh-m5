@@ -36,9 +36,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
     PhieuMuonData phieumuondata = new PhieuMuonData();
     public static PreparedStatement ps = null;
     public static PreparedStatement ps2 = null;
-    public static String sqlSach = "SELECT * FROM SACH order by Ma_Sach asc";
-    public static String sqlKhach = "SELECT * FROM KHACH_HANG order by Ma_Khach_hang asc";
-    public static String sqlPhieu = "SELECT * FROM PHIEU_MUON order by Ma_Phieu_muon asc";
+ 
     public static String filesach = "D:\\sach.txt";
     /**
      * Creates new form JAdminUpdate
@@ -46,7 +44,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
     public JAdminUpdate() {
         this.setLocation(100, 10);
         initComponents();
-        UpdateTable.LoadData(filesach, tbMuon);
+        UpdateTable.LoadData(filesach, tbSach);
 //        UpdateTable.LoadData(sqlKhach, tbKhach);
 //        UpdateTable.LoadData(sqlPhieu, tbMuon);
         ProcessCrt(false);
