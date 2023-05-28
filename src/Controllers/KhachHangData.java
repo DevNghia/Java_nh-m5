@@ -6,12 +6,19 @@
 package Controllers;
 
 import Models.KhachHang;
+import Models.KhachHang;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -44,56 +51,185 @@ public class KhachHangData {
     }
     
     
-    public static ResultSet showTextfield(String sql) {
-        try {
-//            ps = Connect.getConnect().prepareStatement(sql);
-            return ps.executeQuery();
-        } catch (Exception e) {
-            return null;
+   public static List<String[]> searchKhach(List<String[]> khachList, String searchQuery) {
+    List<String[]> result = new ArrayList<>();
+    for (String[] khach : khachList) {
+        if (khach[0].toLowerCase().contains(searchQuery.toLowerCase()) ||
+            khach[1].toLowerCase().contains(searchQuery.toLowerCase()) ||
+            khach[2].toLowerCase().contains(searchQuery.toLowerCase()) ||
+           khach[3].toLowerCase().contains(searchQuery.toLowerCase())) {
+            result.add(khach);
         }
     }
+    return result;
+}
     
-     public static void InsertKhachHang(KhachHang kh) {
-        String sql = "insert into KHACH_HANG values(?,?,?,?,?,?)";
+     public static boolean InsertKhachHang(String filePath,KhachHang kh) {
+       try {
+        // Đọc dữ liệu từ file txt và lưu vào một danh sách các đối tượng KhachHang
+        List<KhachHang> khachList = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+             String dateString = parts[3];
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
+        Date date;
+
         try {
-//            ps = Connect.getConnect().prepareStatement(sql);
-            ps.setString(1, kh.getMaKH());
-            ps.setString(2, kh.getPass());
-            ps.setString(3, kh.getName());
-            ps.setDate(4, kh.getBirth());
-            ps.setString(5, kh.getDiaChi());
-            ps.setString(6, kh.getPhone());
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Đã thêm khách hàng thành công!" , "Thông báo", 1);
-        } catch(HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "Khách hàng không được thêm" , "Thông báo", 1);
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date(); // Giá trị mặc định nếu không thể phân tích chuỗi
         }
+            if (parts.length == 6) {
+                KhachHang khach = new KhachHang(parts[0], parts[1], parts[2], date, parts[4], parts[5]);
+                khachList.add(khach);
+            } else {
+                System.out.println("Invalid data: " + line);
+            }
+        }
+        reader.close();
+
+        // Kiểm tra xem mã sách mới đã tồn tại trong danh sách chưa
+        boolean found = false;
+        for (KhachHang khach : khachList) {
+            if (khach.getMaKH().equals(kh.getMaKH())) {
+                found = true;
+                break;
+            }
+        }
+
+        // Nếu mã sách mới không tồn tại trong danh sách thì thêm vào danh sách
+        if (!found) {
+            khachList.add(kh);
+        } else {
+            System.out.println("Ma khach hang da ton tai: " + kh.getMaKH());
+            JOptionPane.showMessageDialog(null, "Mã khách hàng đã tồn tại!", "Thông báo", 2);
+        }
+
+        // Ghi lại danh sách các đối tượng KhachHang vào file txt
+        FileWriter writer = new FileWriter(filePath);
+        for (KhachHang khach : khachList) {
+            writer.write(khach.toString() + "\n");
+        }
+        writer.close();
+
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
     }
     
-    public boolean UpdateKhachHang(KhachHang kh) {
+    public static boolean UpdateKhachHang(String filePath,KhachHang kh) {
+       try {
+        // Đọc dữ liệu từ file txt và lưu vào một danh sách các đối tượng KhachHang
+        List<KhachHang> khachList = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+             String dateString = parts[3];
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
+        Date date;
+
         try {
-//            ps = Connect.getConnect().prepareStatement("UPDATE KHACH_HANG SET Password = ?, Ten_Khach_hang = ?,"
-//                    + "Ngay_sinh = ?, Dia_chi = ?, Phone = ? where Ma_Khach_hang = ?");
-            ps.setString(6, kh.getMaKH());
-            ps.setString(1, kh.getPass());
-            ps.setString(2, kh.getName());
-            ps.setDate(3, kh.getBirth());
-            ps.setString(4, kh.getDiaChi());
-            ps.setString(5, kh.getPhone());
-            return ps.executeUpdate() >0;
-        } catch (Exception e) {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date(); // Giá trị mặc định nếu không thể phân tích chuỗi
+        }
+           if(parts.length == 6){
+                KhachHang khach = new KhachHang(parts[0], parts[1], parts[2], date, parts[4], parts[5]);
+            khachList.add(khach);
+           }else{
+               System.out.println("Invalid data: " + line);
+           }
+        }
+        reader.close();
+        
+        // Cập nhật dữ liệu trong danh sách các đối tượng KhachHang
+        for (KhachHang khach : khachList) {
+            if (khach.getMaKH().equals(kh.getMaKH())) {
+                khach.setPass(kh.getPass());
+               khach.setName(kh.getName());
+                khach.setBirth(kh.getBirth());
+                khach.setDiaChi(kh.getDiaChi());
+              khach.setPhone(kh.getPhone());
+                break;
+            }
+        }
+        
+        // Ghi lại danh sách các đối tượng KhachHang vào file txt
+        FileWriter writer = new FileWriter(filePath);
+        for (KhachHang khach : khachList) {
+            writer.write(khach.toString() + "\n");
+        }
+        writer.close();
+        
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+    }
+    
+    public static boolean DeleteKhachHang(String filePath,String maKH) {
+        try {
+        // Đọc dữ liệu từ file txt và lưu vào một danh sách các đối tượng KhachHang
+        List<KhachHang> khachList = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+               String dateString = parts[3];
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
+        Date date;
+
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date(); // Giá trị mặc định nếu không thể phân tích chuỗi
+        }
+            if (parts.length == 6) {
+               KhachHang khach = new KhachHang(parts[0], parts[1], parts[2], date, parts[4], parts[5]);
+                khachList.add(khach);
+            } else {
+                System.out.println("Invalid data: " + line);
+            }
+        }
+        reader.close();
+
+        // Tìm và xóa đối tượng KhachHang có mã sách trùng với maKhachHang
+        KhachHang khachToRemove = null;
+        for (KhachHang khach : khachList) {
+            if (khach.getMaKH().equals(maKH)) {
+                khachToRemove = khach;
+                break;
+            }
+        }
+
+        if (khachToRemove != null) {
+            khachList.remove(khachToRemove);
+        } else {
+            System.out.println("Khong tim thay khach co ma: " + maKH);
             return false;
         }
-    }
-    
-    public boolean DeleteKhachHang(String maKH) {
-        try {
-//            ps = Connect.getConnect().prepareStatement("DELETE FROM KHACH_HANG WHERE Ma_Khach_hang = ?");
-            ps.setString(1, maKH);
-            return ps.executeUpdate() >0;
-        } catch(Exception e) {
-            return false;
+
+        // Ghi lại danh sách các đối tượng KhachHang vào file txt
+        FileWriter writer = new FileWriter(filePath);
+        for (KhachHang khach : khachList) {
+            writer.write(khach.toString() + "\n");
         }
+        writer.close();
+
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
     }
     
 }

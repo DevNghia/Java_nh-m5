@@ -24,14 +24,7 @@ public class SachData {
     public static PreparedStatement ps;
     public static ResultSet rs;
     
-//    public static ResultSet showTextfield(String sql) {
-//        try {
-//            ps = Connect.getConnect().prepareStatement(sql);
-//            return ps.executeQuery();
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
+
     
     public static List<String[]> searchSach(List<String[]> sachList, String searchQuery) {
     List<String[]> result = new ArrayList<>();

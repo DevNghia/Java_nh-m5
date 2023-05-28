@@ -63,13 +63,63 @@ public class UpdateTable {
         JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
     }
 }
+    public static void LoadDataK(String fileName, JTable tb) {
+    try {
+        FileReader fr = new FileReader(fileName);
+        BufferedReader br = new BufferedReader(fr);
+
+        String line;
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Mã khách hàng");
+        model.addColumn("Password");
+        model.addColumn("Tên khách hàng");
+          model.addColumn("Ngày sinh");
+        model.addColumn("Địa chỉ");
+        model.addColumn("Số điện thoại");
+        //Thêm các cột khác nếu cần thiết
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split(","); //Phân tách dữ liệu bằng khoảng trắng hoặc dấu phẩy hoặc ký tự khác nếu có
+            model.addRow(data);
+        }
+        tb.setModel(model);
+        br.close();
+        fr.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
+    }
+}
+     public static void LoadDataPM(String fileName, JTable tb) {
+    try {
+        FileReader fr = new FileReader(fileName);
+        BufferedReader br = new BufferedReader(fr);
+
+        String line;
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Mã phiếu mượn");
+        model.addColumn("Mã khách hàng");
+        model.addColumn("Mã sách");
+          model.addColumn("Ngày mượn");
+        model.addColumn("Hạn trả");
+        model.addColumn("Ngày trả");
+        //Thêm các cột khác nếu cần thiết
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split(","); //Phân tách dữ liệu bằng khoảng trắng hoặc dấu phẩy hoặc ký tự khác nếu có
+            model.addRow(data);
+        }
+        tb.setModel(model);
+        br.close();
+        fr.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
+    }
+}
    public static void LoadData1(List<String[]> fileName, JTable tb) {
     try {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Mã sách");
         model.addColumn("Tên sách");
         model.addColumn("Tên tác giả");
-           model.addColumn("NXB");
+        model.addColumn("NXB");
         model.addColumn("Giá");
         model.addColumn("Số lượng");
 
@@ -82,9 +132,45 @@ public class UpdateTable {
         JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
     }
 }
+ public static void LoadDataK1(List<String[]> fileName, JTable tb) {
+    try {
+        DefaultTableModel model = new DefaultTableModel();
+       model.addColumn("Mã khách hàng");
+        model.addColumn("Password");
+        model.addColumn("Tên khách hàng");
+          model.addColumn("Ngày sinh");
+        model.addColumn("Địa chỉ");
+        model.addColumn("Số điện thoại");
 
+        for (String[] data : fileName) {
+            model.addRow(data);
+        }
+        tb.setModel(model);
 
-    
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
+    }
+}
+
+public static void LoadDataPM1(List<String[]> fileName, JTable tb) {
+    try {
+        DefaultTableModel model = new DefaultTableModel();
+       model.addColumn("Mã phiếu mượn");
+        model.addColumn("Mã khách hàng");
+        model.addColumn("Mã sách");
+          model.addColumn("Ngày mượn");
+        model.addColumn("Hạn trả");
+        model.addColumn("Ngày trả");
+
+        for (String[] data : fileName) {
+            model.addRow(data);
+        }
+        tb.setModel(model);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
+    }
+}    
     public static ResultSet ShowTextField(String sql) {
         try{
 //            ps = con.prepareStatement(sql);

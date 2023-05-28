@@ -5,7 +5,8 @@
  */
 package Models;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -73,4 +74,11 @@ public class KhachHang {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    @Override
+    public String toString() {
+          SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
+        return  maKhachHang + ","+ password + "," + name + "," +dateFormat.format(birth) + "," + diaChi + "," + phone ;
+    }
+    
 }

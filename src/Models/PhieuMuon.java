@@ -5,7 +5,8 @@
  */
 package Models;
 
-import java.sql.Date;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -62,6 +63,12 @@ public class PhieuMuon {
     }
     public void setHanTra(Date ht) {
         this.hanTra = ht;
+    }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
+        return maMuon + "," + maKhach + "," + maSach + "," + dateFormat.format(ngayMuon) + "," + dateFormat.format(hanTra) ;
     }
     
     

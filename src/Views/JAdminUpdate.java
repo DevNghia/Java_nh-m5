@@ -13,10 +13,18 @@ import Models.KhachHang;
 import Models.NhaXb;
 import Models.PhieuMuon;
 import Models.Sach;
-import java.sql.Date;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +46,8 @@ public class JAdminUpdate extends javax.swing.JFrame {
     public static PreparedStatement ps2 = null;
  
     public static String filesach = "D:\\sach.txt";
+        public static String KH = "D:\\khachhang.txt";
+          public static String PM = "D:\\phieumuon.txt";
     /**
      * Creates new form JAdminUpdate
      */
@@ -45,8 +55,8 @@ public class JAdminUpdate extends javax.swing.JFrame {
         this.setLocation(100, 10);
         initComponents();
         UpdateTable.LoadData(filesach, tbSach);
-//        UpdateTable.LoadData(sqlKhach, tbKhach);
-//        UpdateTable.LoadData(sqlPhieu, tbMuon);
+        UpdateTable.LoadDataK(KH, tbKhach);
+        UpdateTable.LoadDataPM(PM, tbMuon);
         ProcessCrt(false);
         ProcessCrt2(false);
         ProcessCrt3(false);
@@ -705,7 +715,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
     }//GEN-LAST:event_tbSachMouseClicked
 
     private void btLookSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookSachActionPerformed
-        // TODO add your handling code here:
+//         TODO add your handling code here:
         try {
         String searchText = this.txtLookSach.getText();
         if(searchText.length() == 0){
@@ -780,55 +790,65 @@ public class JAdminUpdate extends javax.swing.JFrame {
     }//GEN-LAST:event_btDelSachActionPerformed
 
     private void tbKhachMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbKhachMouseClicked
-        // TODO add your handling code here:
+//        // TODO add your handling code here:
         ProcessCrt2(true);
         this.btAddKhach.setEnabled(false);
-        try{
-            int row = this.tbKhach.getSelectedRow();
-            String IDrow = (this.tbKhach.getModel().getValueAt(row, 0)).toString();
-            String sql1 = "SELECT * FROM KHACH_HANG where Ma_Khach_hang='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaKhach.setText(rs.getString("Ma_Khach_hang"));
-                this.txtPassword.setText(rs.getString("Password"));
-                this.txtTenKhach.setText(rs.getString("Ten_Khach_hang"));
-                this.txtNgaySinh.setText(rs.getString("Ngay_sinh"));
-                this.txtDiaChi.setText(rs.getString("Dia_Chi"));
-                this.txtPhone.setText(rs.getString("Phone"));
-                
+     try{
+        int row = this.tbKhach.getSelectedRow();
+        String IDrow = (this.tbKhach.getModel().getValueAt(row, 0)).toString();
+        List<String[]> data = UpdateTable.getDataFromTextFile(KH);
+        for (String[] rows : data) {
+            if (rows[0].equals(IDrow)) {
+                this.txtMaKhach.setText(rows[0]);
+                this.txtPassword.setText(rows[1]); 
+                this.txtTenKhach.setText(rows[2]);
+                this.txtNgaySinh.setText(rows[3]);
+                this.txtDiaChi.setText(rows[4]);
+                this.txtPhone.setText(rows[5]);
+                break;
             }
-        }catch(Exception e) {
-            
         }
+    } catch(Exception e) {
+        // Handle exception
+    }
     }//GEN-LAST:event_tbKhachMouseClicked
 
     private void btLookKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookKhachActionPerformed
         // TODO add your handling code here:
-        if(this.txtLookKhach.getText().length() == 0) {
-            String sql1 = "SELECT * from KHACH_HANG ";
-            UpdateTable.LoadData(sql1, tbKhach);
+         try {
+        String searchText = this.txtLookKhach.getText();
+        if(searchText.length() == 0){
+            UpdateTable.LoadDataK(KH, tbKhach);
+        }else{
+            List<String[]> khachList = UpdateTable.getDataFromTextFile(KH);
+            List<String[]> searchData = KhachHangData.searchKhach(khachList, searchText);
+            UpdateTable.LoadDataK1(searchData, tbKhach);
         }
-        else {
-            String sql1 = "SELECT * from KHACH_HANG WHERE Ma_Khach_hang like N'%"+this.txtLookKhach.getText()+"%' "
-                    + "or Ten_Khach_hang like N'%"+this.txtLookKhach.getText()+"%' or Phone like '%"+this.txtLookKhach.getText()+"%'"
-                    +"or Mail like N'%"+this.txtLookKhach.getText()+"%'";
-            UpdateTable.LoadData(sql1, tbKhach);
-        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btLookKhachActionPerformed
 
     private void btAddKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddKhachActionPerformed
-        // TODO add your handling code here:
-        try{
-             if (this.txtMaKhach.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã khách hàng không thể bỏ trống", "thông báo", 2);
-            else if(this.txtMaKhach.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã khách hàng không được lớn hơn 10 ký tự", "thông báo", 2);
-            else {
-            KhachHang s = new KhachHang(this.txtMaKhach.getText(), this.txtPassword.getText(), this.txtTenKhach.getText(),Date.valueOf(this.txtNgaySinh.getText()),
-            this.txtDiaChi.getText(),this.txtPhone.getText());
-            KhachHangData.InsertKhachHang(s);
-            this.btLookKhach.doClick();
+       // TODO add your handling code here:
+        if (this.txtMaKhach.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã khách hàng không thể bỏ trống", "thông báo", 2);
+        else if(this.txtMaKhach.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã khách hàng không được lớn hơn 10 ký tự", "thông báo", 2);
+        else {
+       String dateString = txtNgaySinh.getText();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
+        java.util.Date date;
+
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new java.util.Date(); // Giá trị mặc định nếu không thể phân tích chuỗi
         }
-        }catch(Exception e) {
-            JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
+KhachHang kh = new KhachHang(txtMaKhach.getText(), txtPassword.getText(), txtTenKhach.getText(), 
+                            date, txtDiaChi.getText(), txtPhone.getText());
+            KhachHangData.InsertKhachHang(KH,kh);
+//            UpdateTable.LoadData(filesach, tbSach);
+            this.btLookKhach.doClick();
         }
         
     }//GEN-LAST:event_btAddKhachActionPerformed
@@ -838,9 +858,19 @@ public class JAdminUpdate extends javax.swing.JFrame {
         if (this.txtMaKhach.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã khách hàng không thể bỏ trống", "thông báo", 2);
         else if(this.txtMaKhach.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã khách hàng không được lớn hơn 10 ký tự", "thông báo", 2);
         else {
-            KhachHang s = new KhachHang(this.txtMaKhach.getText(), this.txtPassword.getText(), this.txtTenKhach.getText(),Date.valueOf(this.txtNgaySinh.getText()),
+             String dateString = txtNgaySinh.getText();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
+        java.util.Date date;
+
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new java.util.Date(); // Giá trị mặc định nếu không thể phân tích chuỗi
+        }
+            KhachHang s = new KhachHang(this.txtMaKhach.getText(), this.txtPassword.getText(), this.txtTenKhach.getText(),date,
             this.txtDiaChi.getText(),this.txtPhone.getText());
-            if(khachhangdata.UpdateKhachHang(s)) {
+            if(KhachHangData.UpdateKhachHang(KH, s)) {
                 JOptionPane.showMessageDialog(null, "Bạn đã sửa thành công", "Thông báo", 1);
             }
             else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
@@ -849,11 +879,11 @@ public class JAdminUpdate extends javax.swing.JFrame {
     }//GEN-LAST:event_btEditKhachActionPerformed
 
     private void btDelKhachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDelKhachActionPerformed
-        // TODO add your handling code here:
-        if (this.txtMaKhach.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã sách không thể bỏ trống", "thông báo", 2);
-        else if(this.txtMaKhach.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã sách không được lớn hơn 10 ký tự", "thông báo", 2);
+       // TODO add your handling code here:
+        if (this.txtMaKhach.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã khách không thể bỏ trống", "thông báo", 2);
+        else if(this.txtMaKhach.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã khách không được lớn hơn 10 ký tự", "thông báo", 2);
         else {
-            if(khachhangdata.DeleteKhachHang(this.txtMaKhach.getText())) {
+            if(KhachHangData.DeleteKhachHang(KH,this.txtMaKhach.getText())) {
                 JOptionPane.showMessageDialog(null, "Bạn đã xóa thành công", "Thông báo", 1);
             }
             else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
@@ -878,34 +908,38 @@ public class JAdminUpdate extends javax.swing.JFrame {
         ProcessCrt3(true);
         this.btAddPhieu.setEnabled(false);
         try{
-            int row = this.tbMuon.getSelectedRow();
-            String IDrow = (this.tbMuon.getModel().getValueAt(row, 0)).toString();
-            String sql1 = "SELECT * FROM PHIEU_MUON where Ma_Phieu_muon='"+IDrow+"'";
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            if(rs.next()) {
-                this.txtMaPhieuMuon.setText(rs.getString("Ma_Phieu_muon"));
-                this.txtNguoiMuon.setText(rs.getString("Ma_Khach_hang"));
-                this.txtSachMuon.setText(rs.getString("Ma_Sach"));
-                this.txtNgayMuon.setText(rs.getString("Ngay_muon"));
-                this.txtHanTra.setText(rs.getString("Han_tra"));
-                
+        int row = this.tbMuon.getSelectedRow();
+        String IDrow = (this.tbMuon.getModel().getValueAt(row, 0)).toString();
+        List<String[]> data = UpdateTable.getDataFromTextFile(PM);
+        for (String[] rows : data) {
+            if (rows[0].equals(IDrow)) {
+                this.txtMaPhieuMuon.setText(rows[0]);
+                this.txtNguoiMuon.setText(rows[1]);
+                this.txtSachMuon.setText(rows[2]); 
+                this.txtNgayMuon.setText(rows[3]);
+                this.txtHanTra.setText(rows[4]);
+                break;
             }
-        }catch(Exception e) {
-            
         }
+    } catch(Exception e) {
+        // Handle exception
+    }
     }//GEN-LAST:event_tbMuonMouseClicked
 
     private void btLookMuonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookMuonActionPerformed
         // TODO add your handling code here:
-        if(this.txtLookPhieu.getText().length() == 0) {
-            String sql1 = "SELECT * from PHIEU_MUON ";
-            UpdateTable.LoadData(sql1, tbMuon);
+         try {
+        String searchText = this.txtLookPhieu.getText();
+        if(searchText.length() == 0){
+            UpdateTable.LoadDataPM(PM, tbMuon);
+        }else{
+            List<String[]> phieuList = UpdateTable.getDataFromTextFile(PM);
+            List<String[]> searchData = PhieuMuonData.searchMuon(phieuList, searchText);
+            UpdateTable.LoadDataPM1(searchData, tbMuon);
         }
-        else {
-            String sql1 = "SELECT * from PHIEU_MUON WHERE Ma_Phieu_muon like N'%"+this.txtLookPhieu.getText()+"%' "
-                    + "or Ma_Khach_hang like N'%"+this.txtLookPhieu.getText()+"%' or Ma_Sach like N'%"+this.txtLookPhieu.getText()+"%'";
-            UpdateTable.LoadData(sql1, tbMuon);
-        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btLookMuonActionPerformed
 
     private void btAddPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddPhieuActionPerformed
@@ -915,43 +949,57 @@ public class JAdminUpdate extends javax.swing.JFrame {
                  JOptionPane.showMessageDialog(null, "Mã phiếu mượn không thể bỏ trống", "thông báo", 2);
             else if(this.txtMaPhieuMuon.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã phiếu mượn không được lớn hơn 10 ký tự", "thông báo", 2);
             else {
-            PhieuMuon p = new PhieuMuon(this.txtMaPhieuMuon.getText(),this.txtNguoiMuon.getText(),this.txtSachMuon.getText(),
-                    Date.valueOf(this.txtNgayMuon.getText()),Date.valueOf(this.txtHanTra.getText()));
-            PhieuMuonData.InsertPhieu(p);
+                String dateString = txtNgayMuon.getText();
+                 String dateString2 = txtHanTra.getText();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
+        Date date,date2;
+
+        try {
+            date = dateFormat.parse(dateString);
+            date2 = dateFormat.parse(dateString2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date(); 
+            date2 = new Date(); // Giá trị mặc định nếu không thể phân tích chuỗi
+        }
+            PhieuMuon p = new PhieuMuon(this.txtMaPhieuMuon.getText(),this.txtNguoiMuon.getText(),this.txtSachMuon.getText(),date,date2);
+            PhieuMuonData.InsertPhieu(PM,p);
             this.btLookMuon.doClick();
         }
         }catch(Exception e) {
             JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
         }
         
-        String sql = "UPDATE SACH SET So_luong = ? where Ma_Sach = ?";
-        String sql1 = "SELECT So_luong from SACH where Ma_Sach = '"+this.txtSachMuon.getText()+"'";
-        try {
-//            ps = Connect.getConnect().prepareStatement(sql);
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            ps.setString(2,this.txtSachMuon.getText());
-            int count = 0;
-            if(rs.next()) count = rs.getInt("So_luong");
-            ps.setInt(1, count-1);
-            ps.execute();
-            this.btLookSach.doClick();
-        } catch (Exception ex) {
-        }
+       
         
     }//GEN-LAST:event_btAddPhieuActionPerformed
 
     private void btEditPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditPhieuActionPerformed
         // TODO add your handling code here:
-        if (this.txtMaPhieuMuon.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã phiếu mượn không thể bỏ trống", "thông báo", 2);
-        else if(this.txtMaPhieuMuon.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã phiếu mượn không được lớn hơn 10 ký tự", "thông báo", 2);
-        else {
-            PhieuMuon p = new PhieuMuon(this.txtMaPhieuMuon.getText(), this.txtNguoiMuon.getText(),
-                    this.txtSachMuon.getText(),Date.valueOf(this.txtNgayMuon.getText()),Date.valueOf(this.txtHanTra.getText()));
-            if(phieumuondata.UpdatePhieu(p)) {
-                JOptionPane.showMessageDialog(null, "Bạn đã sửa thành công", "Thông báo", 1);
-            }
-            else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
+         try{
+             if (this.txtMaPhieuMuon.getText().length()==0 ) 
+                 JOptionPane.showMessageDialog(null, "Mã phiếu mượn không thể bỏ trống", "thông báo", 2);
+            else if(this.txtMaPhieuMuon.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã phiếu mượn không được lớn hơn 10 ký tự", "thông báo", 2);
+            else {
+                String dateString = txtNgayMuon.getText();
+                 String dateString2 = txtHanTra.getText();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
+        Date date,date2;
+
+        try {
+            date = dateFormat.parse(dateString);
+            date2 = dateFormat.parse(dateString2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            date = new Date(); 
+            date2 = new Date(); // Giá trị mặc định nếu không thể phân tích chuỗi
+        }
+            PhieuMuon p = new PhieuMuon(this.txtMaPhieuMuon.getText(),this.txtNguoiMuon.getText(),this.txtSachMuon.getText(),date,date2);
+            PhieuMuonData.UpdatePhieu(PM,p);
             this.btLookMuon.doClick();
+        }
+        }catch(Exception e) {
+            JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
         }
     }//GEN-LAST:event_btEditPhieuActionPerformed
 
@@ -960,7 +1008,7 @@ public class JAdminUpdate extends javax.swing.JFrame {
         if (this.txtMaPhieuMuon.getText().length()==0) JOptionPane.showMessageDialog(null, "Mã phiếu không thể bỏ trống", "thông báo", 2);
         else if(this.txtMaPhieuMuon.getText().length()>10) JOptionPane.showMessageDialog(null, "Mã phiếu không được lớn hơn 10 ký tự", "thông báo", 2);
         else {
-            if(phieumuondata.DeletePhieu(this.txtMaPhieuMuon.getText())) {
+            if(phieumuondata.DeletePhieu(PM,this.txtMaPhieuMuon.getText())) {
                 JOptionPane.showMessageDialog(null, "Bạn đã xóa thành công", "Thông báo", 1);
             }
             else JOptionPane.showMessageDialog(null, "Có lỗi xảy ra", "Thông báo", 2);
@@ -989,42 +1037,46 @@ public class JAdminUpdate extends javax.swing.JFrame {
 
     private void btTraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTraActionPerformed
         // TODO add your handling code here:
-        
-        String sql = "UPDATE SACH SET So_luong = ? where Ma_Sach = ?";
-        String sql1 = "SELECT So_luong from SACH where Ma_Sach = '"+this.txtSachMuon.getText()+"'";
-        String sql2 = "UPDATE PHIEU_MUON SET NgayTra = (select GETDATE()) where Ma_Phieu_muon = ?";
-        
-         
-        try {
-//            ps2 = Connect.getConnect().prepareStatement(sql2);
-             ps2.setString(1, this.txtMaPhieuMuon.getText());
-      
-              ps2.execute();
-           
-            this.btLookMuon.doClick();
-            
-//            ps = Connect.getConnect().prepareStatement(sql);
-            ResultSet rs = UpdateTable.ShowTextField(sql1);
-            try{
-            ps.setString(2,this.txtSachMuon.getText());     
-            }
-            catch(Exception ex1){
-                 JOptionPane.showMessageDialog(this,"Loi setString index 2"+ex1);
-            }
-           
-            int count = 0;
-            if(rs.next()) 
-                count = rs.getInt("So_luong");
-       
-            ps.setInt(1, count+1);
-           
-            ps.execute();
-           JOptionPane.showMessageDialog(this, "Tra sach thanh cong");
-          this.btLookSach.doClick();
-           this.btLookMuon.doClick();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,"Co loi xay ra"+ex);
+        String filePath = "D:\\phieumuon.txt"; // Thay thế đường dẫn tới tệp tin txt thực tế
+        String maPhieuMuon = this.txtMaPhieuMuon.getText();
+        String ngayTra = LocalDate.now().toString();
+try {
+    // Đọc toàn bộ nội dung từ tệp tin gốc
+    List<String> lines = Files.readAllLines(Paths.get(filePath));
+
+    // Tìm vị trí của mã phiếu mượn trong danh sách dòng
+    int index = -1;
+    for (int i = 0; i < lines.size(); i++) {
+        String line = lines.get(i);
+        if (line.startsWith(maPhieuMuon)) {
+            index = i;
+            break;
         }
+    }
+
+    // Nếu tìm thấy mã phiếu mượn, cập nhật ngày trả tại cột thứ 5 trong hàng tương ứng
+    if (index >= 0) {
+        String[] row = lines.get(index).split(","); // Phân tách hàng thành các cột bằng dấu ","
+        row[5] = ngayTra; // Cập nhật ngày trả tại cột thứ 5
+
+        lines.set(index, String.join(",", row)); // Ghi lại hàng đã được cập nhật vào danh sách dòng
+
+        // Ghi lại toàn bộ nội dung vào tệp tin
+        FileWriter writer = new FileWriter(filePath);
+        for (String line : lines) {
+            writer.write(line + "\n");
+        }
+        writer.close();
+
+        JOptionPane.showMessageDialog(this, "Trả sách thành công");
+        this.btLookSach.doClick();
+        this.btLookMuon.doClick();
+    } else {
+        JOptionPane.showMessageDialog(this, "Không tìm thấy mã phiếu mượn trong tệp tin");
+    }
+} catch (IOException ex) {
+    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi ghi vào tệp tin: " + ex);
+}
     }//GEN-LAST:event_btTraActionPerformed
 
     private void txtMaSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaSachActionPerformed
