@@ -42,7 +42,6 @@
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="lbTongKhach" alignment="0" max="32767" attributes="0"/>
                                           <Component id="lbTongPhieu" max="32767" attributes="0"/>
-                                          <Component id="lbTongKhachMuon" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
@@ -85,9 +84,7 @@
                       <Component id="lbTongSach" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbTongPhieu" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lbTongKhachMuon" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="lbTongPhieuQuaHan" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -154,11 +151,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lbTongPhieu">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="?"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lbTongKhachMuon">
       <Properties>
         <Property name="text" type="java.lang.String" value="?"/>
       </Properties>

@@ -113,6 +113,26 @@ public class UpdateTable {
         JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
     }
 }
+     public static void LoadDataPM(List<String> lines, JTable tb) {
+    try {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Mã phiếu mượn");
+        model.addColumn("Mã khách hàng");
+        model.addColumn("Mã sách");
+        model.addColumn("Ngày mượn");
+        model.addColumn("Hạn trả");
+        model.addColumn("Ngày trả");
+
+        for (String line : lines) {
+            String[] data = line.split(",");
+            model.addRow(data);
+        }
+
+        tb.setModel(model);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, "Thông báo lỗi", 1);
+    }
+}
    public static void LoadData1(List<String[]> fileName, JTable tb) {
     try {
         DefaultTableModel model = new DefaultTableModel();

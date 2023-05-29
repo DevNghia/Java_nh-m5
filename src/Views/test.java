@@ -32,7 +32,6 @@ public class test extends javax.swing.JFrame {
         btThongKe = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
-        btSearch = new javax.swing.JButton();
         btBaoCao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -65,14 +64,6 @@ public class test extends javax.swing.JFrame {
             }
         });
 
-        btSearch.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        btSearch.setText("Tìm kiếm");
-        btSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSearchActionPerformed(evt);
-            }
-        });
-
         btBaoCao.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         btBaoCao.setText("Báo Cáo");
         btBaoCao.addActionListener(new java.awt.event.ActionListener() {
@@ -98,7 +89,6 @@ public class test extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(btBaoCao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(162, 162, 162))))
@@ -110,11 +100,9 @@ public class test extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(43, 43, 43)
                 .addComponent(btBaoCao, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(41, 41, 41)
                 .addComponent(btThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jButton3)
@@ -146,13 +134,6 @@ public class test extends javax.swing.JFrame {
         tk.setVisible(true);
         dispose();
     }//GEN-LAST:event_btThongKeActionPerformed
-
-    private void btSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSearchActionPerformed
-        // TODO add your handling code here:
-        JAdminSearch jas = new JAdminSearch();
-        jas.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_btSearchActionPerformed
 
     private void btBaoCaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBaoCaoActionPerformed
         // TODO add your handling code here:
@@ -198,7 +179,6 @@ public class test extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btBaoCao;
-    private javax.swing.JButton btSearch;
     private javax.swing.JButton btThongKe;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;

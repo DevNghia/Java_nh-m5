@@ -6,10 +6,13 @@
 package Views;
 
 import static Views.UpdateTable.ps;
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -25,7 +29,7 @@ import net.proteanit.sql.DbUtils;
  */
 public class ThongKe extends javax.swing.JFrame {
     
-    public static String sql = "SELECT * FROM PHIEU_MUON where (Han_tra < (select GETDATE()) and NgayTra IS NULL)";
+    public static String PM = "D:\\phieumuon.txt";
 //    public JTextArea getTa() {
 //        return taBaoCao;
 //    }
@@ -38,49 +42,84 @@ public class ThongKe extends javax.swing.JFrame {
      * Creates new form ThongKe
      */
     public ThongKe() {
-        initComponents();
-        UpdateTable.LoadData(sql, tbPhieuQuaHan);
-        try{
-            String sql1 = "SELECT SUM(So_luong) as sach FROM SACH";
-            String sql2 = "SELECT COUNT(Ma_Khach_hang) as khachhang FROM KHACH_HANG";
-            String sql3 = "SELECT COUNT(Ma_Phieu_muon) as phieumuon FROM PHIEU_MUON";
-            String sql4 = "SELECT COUNT(DISTINCT Ma_Khach_hang) as khachmuon FROM PHIEU_MUON";
-            String sql5 = "SELECT COUNT(Ma_Phieu_muon) as phieumuon FROM PHIEU_MUON where (Han_tra < (select GETDATE()) and NgayTra IS NULL)";
-            ResultSet rs1 = UpdateTable.ShowTextField(sql1);
-            ResultSet rs2 = UpdateTable.ShowTextField(sql2);
-            ResultSet rs3 = UpdateTable.ShowTextField(sql3);
-            ResultSet rs4 = UpdateTable.ShowTextField(sql4);
-            ResultSet rs5 = UpdateTable.ShowTextField(sql5);
-            if(rs1.next()) this.lbTongSach.setText("Tổng số sách : "+Integer.toString(rs1.getInt("sach")));
-            if(rs2.next()) this.lbTongKhach.setText("Tổng số khách hàng: " + Integer.toString(rs2.getInt("khachhang")));
-            if(rs3.next()) this.lbTongPhieu.setText(" Tổng số phiếu mượn: "+Integer.toString(rs3.getInt("phieumuon")));
-            if(rs4.next()) this.lbTongKhachMuon.setText("Tổng số khách đang mượn sách: "+Integer.toString(rs4.getInt("khachmuon")));
-            if(rs5.next()) this.lbTongPhieuQuaHan.setText("Tổng số phiếu quá hạn là: "+Integer.toString(rs5.getInt("phieumuon")));
-            
-        }catch(Exception e) {
-            
-        }
-        ResultSet rs = null ;
-//        try {
-//            ps = con.prepareStatement(sql);
-//            rs = ps.executeQuery();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ThongKe.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        List l;
-//        l=DbUtils.resultSetToNestedList(rs);
-//        this.taBaoCao.append(this.lbTongSach.getText()+"\n");
-//        this.taBaoCao.append(this.lbTongKhach.getText()+"\n");
-//        this.taBaoCao.append(this.lbTongPhieu.getText()+"\n");
-//        this.taBaoCao.append(this.lbTongKhachMuon.getText()+"\n");
-//        this.taBaoCao.append(this.lbTongPhieuQuaHan.getText()+"\n\n");
-//        this.taBaoCao.append("| Mã PM    | Mã KH    | Mã sách | Ngày mượn | Hạn trả      |Tiền cọc|Ngày Trả |\n");
-//        for(int i=1;i<l.size();i++){
-//             this.taBaoCao.append(this.lbTongPhieuQuaHan.getText()+"\n\n");
-//          this.taBaoCao.append(l.get(i).toString()+"\n");     
-//        }
+       initComponents();
+       
+//    UpdateTable.LoadDataPM(PM, tbPhieuQuaHan);
+    try {
+        String sachFilePath = "D:\\sach.txt";
+         String khachHangFilePath = "D:\\khachhang.txt";
+        String phieuMuonFilePath = "D:\\phieumuon.txt";
+         List<String> lines = getLinesWithNonZeroLastElement(PM);
+         UpdateTable.LoadDataPM(lines, tbPhieuQuaHan);
+        int sum = readFileAndGetColumnSum(sachFilePath, 6);
+         int khachHangSum = countTotalLines(khachHangFilePath);
+        int phieuMuonSum = countTotalLines(phieuMuonFilePath);
+         int phieuQuaHanSum = countLinesWithNonZeroLastElement(phieuMuonFilePath);
+         
+        this.lbTongSach.setText("Tổng số sách là: " + sum);
+         this.lbTongKhach.setText("Tổng số khách hàng: " + khachHangSum);
+        this.lbTongPhieu.setText("Tổng số phiếu mượn: " + phieuMuonSum);
+         this.lbTongPhieuQuaHan.setText("Tổng số phiếu quá hạn là: " + phieuQuaHanSum);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
        
     }
+   private List<String> getLinesWithNonZeroLastElement(String filePath) throws Exception {
+    BufferedReader br = new BufferedReader(new FileReader(filePath));
+    List<String> lines = new ArrayList<>();
+    String line;
+    while ((line = br.readLine()) != null) {
+        String[] data = line.split(",");
+        if (data.length > 0) {
+            String lastElement = data[data.length - 1].trim();
+            if (lastElement.equals("0")) {
+                lines.add(line);
+            }
+        }
+    }
+    br.close();
+    return lines;
+}
+ private int countLinesWithNonZeroLastElement(String filePath) throws Exception {
+    BufferedReader br = new BufferedReader(new FileReader(filePath));
+    int count = 0;
+    String line;
+    while ((line = br.readLine()) != null) {
+        String[] data = line.split(",");
+        if (data.length > 0) {
+            String lastElement = data[data.length - 1].trim();
+            if (!lastElement.equals("0")) {
+                count++;
+            }
+        }
+    }
+    br.close();
+    return count;
+}
+   private int readFileAndGetColumnSum(String filePath, int columnIndex) throws Exception {
+    BufferedReader br = new BufferedReader(new FileReader(filePath));
+    int sum = 0;
+    String line;
+    while ((line = br.readLine()) != null) {
+        String[] data = line.split(",");
+        if (data.length >= columnIndex) {
+            int value = Integer.parseInt(data[columnIndex - 1].trim());
+            sum += value;
+        }
+    }
+    br.close();
+    return sum;
+}
+   private int countTotalLines(String filePath) throws Exception {
+    BufferedReader br = new BufferedReader(new FileReader(filePath));
+    int totalLines = 0;
+    while (br.readLine() != null) {
+        totalLines++;
+    }
+    br.close();
+    return totalLines;
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,7 +138,6 @@ public class ThongKe extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         lbTongSach = new javax.swing.JLabel();
         lbTongPhieu = new javax.swing.JLabel();
-        lbTongKhachMuon = new javax.swing.JLabel();
         lbTongKhach = new javax.swing.JLabel();
         lbTongPhieuQuaHan = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
@@ -136,8 +174,6 @@ public class ThongKe extends javax.swing.JFrame {
 
         lbTongPhieu.setText("?");
 
-        lbTongKhachMuon.setText("?");
-
         lbTongKhach.setText("?");
 
         jButton2.setText("In báo cáo");
@@ -168,8 +204,7 @@ public class ThongKe extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lbTongKhach, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lbTongPhieu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lbTongKhachMuon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addComponent(lbTongPhieu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel7)))
                                 .addGap(170, 170, 170))
@@ -200,9 +235,7 @@ public class ThongKe extends javax.swing.JFrame {
                         .addComponent(lbTongSach)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbTongPhieu)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbTongKhachMuon)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(28, 28, 28)
                         .addComponent(lbTongPhieuQuaHan)))
                 .addGap(30, 30, 30)
                 .addComponent(jLabel6)
@@ -223,21 +256,49 @@ public class ThongKe extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        try {
-            JFileChooser jfc = new JFileChooser("Save File");
-            if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-               // String content = this.taBaoCao.getText();
-                jfc.setDialogTitle("Save File");
-                FileOutputStream fos = new FileOutputStream(jfc.getSelectedFile());
-             //   fos.write(content.getBytes());
-                fos.flush();
-                fos.close();
-                JOptionPane.showMessageDialog(null, "Lưu thành công");
+       try {
+        JFileChooser jfc = new JFileChooser("Save File");
+        if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            StringBuilder content = new StringBuilder();
+            
+            // Lấy dữ liệu từ JTable
+            DefaultTableModel model = (DefaultTableModel) tbPhieuQuaHan.getModel();
+            int rowCount = model.getRowCount();
+            int columnCount = model.getColumnCount();
+            // Lấy dữ liệu từ JTextField
+            String textField1Value = lbTongSach.getText();
+          String textField2Value = lbTongKhach.getText();
+          String textField3Value = lbTongPhieu.getText();
+          String textField4Value = lbTongPhieuQuaHan.getText();
+            
+            // Thêm dữ liệu từ JTextField vào nội dung
+            content.append(textField1Value).append("\n");
+            content.append(textField2Value).append("\n");
+            content.append(textField3Value).append("\n");
+            content.append(textField4Value).append("\n");
+            
+            // Lặp qua từng hàng và cột trong JTable để lấy dữ liệu
+            for (int row = 0; row < rowCount; row++) {
+                for (int col = 0; col < columnCount; col++) {
+                    Object cellValue = model.getValueAt(row, col);
+                    content.append(cellValue).append("\t"); // Sử dụng ký tự tab ("\t") để phân tách các giá trị
+                }
+                content.append("\n"); // Sử dụng ký tự xuống dòng ("\n") để phân tách các hàng
             }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            
+            
+            // Ghi nội dung vào tệp tin đã chọn
+            jfc.setDialogTitle("Save File");
+            FileOutputStream fos = new FileOutputStream(jfc.getSelectedFile());
+            fos.write(content.toString().getBytes());
+            fos.flush();
+            fos.close();
+            
+            JOptionPane.showMessageDialog(null, "Lưu thành công");
         }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage());
+    }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -283,7 +344,6 @@ public class ThongKe extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbTongKhach;
-    private javax.swing.JLabel lbTongKhachMuon;
     private javax.swing.JLabel lbTongPhieu;
     private javax.swing.JLabel lbTongPhieuQuaHan;
     private javax.swing.JLabel lbTongSach;
